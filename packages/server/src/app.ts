@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
+import path from 'path';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes.js';
 import locationRoutes from './routes/location.routes.js';
@@ -47,6 +48,9 @@ export function createApp() {
   app.use('/api/payments/webhook', express.raw({ type: 'application/json' }));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  // Serve uploaded files
+  app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 
   // API Documentation
   app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openApiSpec, {

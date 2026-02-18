@@ -29,4 +29,18 @@ export const api = {
     request<T>(path, { method: 'PATCH', body: JSON.stringify(body) }),
   delete: <T>(path: string) =>
     request<T>(path, { method: 'DELETE' }),
+  upload: async <T>(path: string, formData: FormData): Promise<T> => {
+    const token = localStorage.getItem('token');
+    const headers: Record<string, string> = {};
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    const res = await fetch(`${API_BASE}${path}`, {
+      method: 'POST',
+      headers,
+      body: formData,
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `Upload failed: ${res.status}`);
+    return data;
+  },
 };

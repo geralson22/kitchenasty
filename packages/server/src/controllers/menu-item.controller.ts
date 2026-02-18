@@ -227,3 +227,50 @@ export async function deleteMenuItem(req: Request<{ id: string }>, res: Response
   await prisma.menuItem.delete({ where: { id } });
   res.json({ success: true, message: 'Menu item deleted' });
 }
+
+export async function uploadMenuItemImage(req: Request<{ id: string }>, res: Response): Promise<void> {
+  const { id } = req.params;
+
+  const existing = await prisma.menuItem.findUnique({ where: { id } });
+  if (!existing) {
+    res.status(404).json({ success: false, error: 'Menu item not found' });
+    return;
+  }
+
+  if (!req.file) {
+    res.status(400).json({ success: false, error: 'No image file provided' });
+    return;
+  }
+
+  const imagePath = `/uploads/${req.file.filename}`;
+
+  const item = await prisma.menuItem.update({
+    where: { id },
+    data: { image: imagePath },
+    include: {
+      category: { select: { id: true, name: true } },
+    },
+  });
+
+  res.json({ success: true, data: item });
+}
+
+export async function deleteMenuItemImage(req: Request<{ id: string }>, res: Response): Promise<void> {
+  const { id } = req.params;
+
+  const existing = await prisma.menuItem.findUnique({ where: { id } });
+  if (!existing) {
+    res.status(404).json({ success: false, error: 'Menu item not found' });
+    return;
+  }
+
+  const item = await prisma.menuItem.update({
+    where: { id },
+    data: { image: null },
+    include: {
+      category: { select: { id: true, name: true } },
+    },
+  });
+
+  res.json({ success: true, data: item });
+}

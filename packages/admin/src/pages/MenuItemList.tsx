@@ -7,6 +7,7 @@ interface MenuItem {
   name: string;
   slug: string;
   price: number;
+  image: string | null;
   isActive: boolean;
   sortOrder: number;
   trackStock: boolean;
@@ -134,8 +135,21 @@ export default function MenuItemList() {
                 {items.map((item) => (
                   <tr key={item.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{item.name}</div>
-                      <div className="text-xs text-gray-400">{item.slug}</div>
+                      <div className="flex items-center gap-3">
+                        {item.image ? (
+                          <img src={item.image} alt={item.name} className="w-10 h-10 rounded object-cover" />
+                        ) : (
+                          <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
+                            <svg className="w-5 h-5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                        )}
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">{item.name}</div>
+                          <div className="text-xs text-gray-400">{item.slug}</div>
+                        </div>
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {item.category.name}
