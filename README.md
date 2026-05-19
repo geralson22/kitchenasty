@@ -165,23 +165,20 @@ cd kitchenasty
 npm install
 ```
 
-### 2. Start the database
+### 2. Configure environment
 
+**Option A: Docker Compose (recommended)**
 ```bash
-docker compose up -d
+cp .env.example .env                          # Root .env for all services
+docker compose up -d --build                  # Build & start all containers
 ```
 
-### 3. Set up environment & migrate
-
+**Option B: Local development**
 ```bash
+docker compose up -d postgres                 # Just the database
 cp packages/server/.env.example packages/server/.env
 npx -w packages/server prisma migrate dev --schema ../../prisma/schema.prisma
 npx -w packages/server prisma db seed
-```
-
-### 4. Start development servers
-
-```bash
 npm run dev:server      # API server → http://localhost:3000
 npm run dev:admin       # Admin panel → http://localhost:5173
 npm run dev:storefront  # Storefront  → http://localhost:5174

@@ -41,6 +41,8 @@ RUN npx -w packages/server prisma generate --schema ../../prisma/schema.prisma
 COPY --from=builder /app/packages/shared/dist/ packages/shared/dist/
 COPY --from=builder /app/packages/server/dist/ packages/server/dist/
 
+RUN mkdir -p /app/uploads && chown node:node /app/uploads
+
 EXPOSE 3000
 
 CMD ["node", "packages/server/dist/index.js"]

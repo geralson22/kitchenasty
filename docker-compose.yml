@@ -3,15 +3,15 @@ services:
     image: postgres:16-alpine
     container_name: kitchenasty-db
     environment:
-      POSTGRES_USER: kitchenasty
-      POSTGRES_PASSWORD: kitchenasty
-      POSTGRES_DB: kitchenasty
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U kitchenasty"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -22,14 +22,18 @@ services:
       dockerfile: packages/server/Dockerfile
     container_name: kitchenasty-server
     ports:
-      - "3000:3000"
+      - "${PORT}:3000"
     environment:
-      PORT: 3000
-      NODE_ENV: development
-      DATABASE_URL: postgresql://kitchenasty:kitchenasty@postgres:5432/kitchenasty
-      CORS_ORIGINS: http://localhost:5173,http://localhost:5174
-      JWT_SECRET: change-this-to-a-random-secret
-      JWT_EXPIRES_IN: 7d
+      PORT: ${PORT}
+      NODE_ENV: ${NODE_ENV}
+      DATABASE_URL: ${DATABASE_URL}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+    volumes:
+      - uploads:/app/uploads
     depends_on:
       postgres:
         condition: service_healthy
@@ -63,4 +67,5 @@ services:
       - "5175:80"
 
 volumes:
+  uploads:
   pgdata:
