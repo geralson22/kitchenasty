@@ -21,6 +21,10 @@ export default function Checkout() {
   const [scheduledAt, setScheduledAt] = useState('');
   const [comment, setComment] = useState('');
   const [couponCode, setCouponCode] = useState('');
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponFreeDelivery, setCouponFreeDelivery] = useState(false);
+  const [couponError, setCouponError] = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -42,9 +46,38 @@ export default function Checkout() {
   const [loyaltyRedeem, setLoyaltyRedeem] = useState(0);
   const loyaltyDiscount = loyaltyRedeem / 100;
 
+  // Coupon apply handler
+  async function handleApplyCoupon() {
+    if (!couponCode.trim()) return;
+    setCouponLoading(true);
+    setCouponError('');
+    try {
+      const res = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponCode.trim(), subtotal }),
+      });
+      const data = await res.json();
+      if (data.success && data.data) {
+        setCouponDiscount(data.data.discount);
+        setCouponFreeDelivery(data.data.freeDelivery);
+      } else {
+        setCouponError(data.error || 'Invalid coupon');
+        setCouponDiscount(0);
+        setCouponFreeDelivery(false);
+      }
+    } catch {
+      setCouponError('Failed to validate coupon');
+      setCouponDiscount(0);
+      setCouponFreeDelivery(false);
+    } finally {
+      setCouponLoading(false);
+    }
+  }
+
   const tax = subtotal * TAX_RATE;
-  const currentDeliveryFee = orderType === 'delivery' ? deliveryFee : 0;
-  const total = subtotal + tax + currentDeliveryFee - loyaltyDiscount;
+  const currentDeliveryFee = orderType === 'delivery' && !couponFreeDelivery ? deliveryFee : 0;
+  const total = subtotal + tax + currentDeliveryFee - loyaltyDiscount - couponDiscount;
 
   // Check busy mode on mount
   useEffect(() => {
@@ -112,8 +145,11 @@ export default function Checkout() {
         items: orderItems,
         comment: comment || undefined,
         scheduledAt: scheduledAt || undefined,
-        couponCode: couponCode || undefined,
       };
+
+      if (couponDiscount > 0 || couponFreeDelivery) {
+        body.couponCode = couponCode.trim().toUpperCase();
+      }
 
       if (orderType === 'delivery') {
         body.address = address;
@@ -309,11 +345,17 @@ export default function Checkout() {
               />
               <button
                 type="button"
-                className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+                onClick={handleApplyCoupon}
+                disabled={couponLoading}
+                className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
               >
-                {t('checkout.apply')}
+                {couponLoading ? '...' : t('checkout.apply')}
               </button>
             </div>
+            {couponError && <p className="text-red-500 text-xs mt-1">{couponError}</p>}
+            {!couponError && couponDiscount > 0 && (
+              <p className="text-green-600 text-xs mt-1">Coupon applied! -${couponDiscount.toFixed(2)}</p>
+            )}
           </div>
 
           {/* Loyalty Points Redemption */}

@@ -373,6 +373,7 @@ model Order {
   // Coupon
   couponId    String?
   coupon      Coupon? @relation(fields: [couponId], references: [id])
+  freeDelivery Boolean @default(false)
 
   // Staff assignment
   assignedToId String?

@@ -111,3 +111,7 @@ Plus: `audit` (npm audit) and `build` (needs lint + unit + integration to pass f
 - Zod for all API input validation
 - Relative imports within a package; `@kitchenasty/shared` for cross-package
 - Branch naming: `feature/`, `fix/`, `docs/`, `refactor/`
+
+## Restrictions
+
+- **Do not update or modify the `packages/mobile` project.** The mobile app is managed separately and should not be touched.

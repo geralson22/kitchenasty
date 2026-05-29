@@ -55,7 +55,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  const { orderType, items, comment, scheduledAt, address, guestName, guestEmail, guestPhone, loyaltyPointsRedeem } = parsed.data;
+  const { orderType, items, comment, scheduledAt, address, guestName, guestEmail, guestPhone, loyaltyPointsRedeem, couponCode } = parsed.data;
 
   if (orderType === 'DELIVERY' && !address) {
     res.status(400).json({ success: false, error: 'Delivery address is required' });
@@ -233,9 +233,60 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
       res.status(400).json({ success: false, error: 'Insufficient loyalty points' });
       return;
     }
-    // 100 points = $1
     loyaltyDiscount = loyaltyPointsRedeem / 100;
   }
+
+  // Coupon validation and discount
+  let couponDiscount = 0;
+  let couponId: string | undefined;
+  let freeDelivery = false;
+  if (couponCode) {
+    const coupon = await prisma.coupon.findUnique({ where: { code: couponCode.toUpperCase() } });
+    if (!coupon) {
+      res.status(400).json({ success: false, error: 'Invalid coupon code' });
+      return;
+    }
+    if (!coupon.isActive) {
+      res.status(400).json({ success: false, error: 'Coupon is not active' });
+      return;
+    }
+    const now = new Date();
+    if (coupon.startsAt && now < coupon.startsAt) {
+      res.status(400).json({ success: false, error: 'Coupon is not yet valid' });
+      return;
+    }
+    if (coupon.expiresAt && now > coupon.expiresAt) {
+      res.status(400).json({ success: false, error: 'Coupon has expired' });
+      return;
+    }
+    if (coupon.usageLimit !== null && coupon.usageCount >= coupon.usageLimit) {
+      res.status(400).json({ success: false, error: 'Coupon usage limit reached' });
+      return;
+    }
+    if (subtotal < coupon.minOrder) {
+      res.status(400).json({ success: false, error: `Minimum order amount is $${coupon.minOrder.toFixed(2)}` });
+      return;
+    }
+
+    if (coupon.type === 'PERCENTAGE') {
+      couponDiscount = subtotal * (coupon.value / 100);
+      if (coupon.maxDiscount !== null) {
+        couponDiscount = Math.min(couponDiscount, coupon.maxDiscount);
+      }
+    } else if (coupon.type === 'FIXED') {
+      couponDiscount = coupon.value;
+    } else if (coupon.type === 'FREE_DELIVERY') {
+      freeDelivery = true;
+    }
+
+    couponId = coupon.id;
+  }
+
+  if (freeDelivery) {
+    deliveryFee = 0;
+  }
+
+  const totalDiscount = loyaltyDiscount + couponDiscount;
 
   // Check minimum order for delivery zone
   if (orderType === 'DELIVERY' && address?.lat != null && address?.lng != null) {
@@ -260,7 +311,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
 
   const TAX_RATE = 0.08;
   const tax = subtotal * TAX_RATE;
-  const total = subtotal + tax + deliveryFee - loyaltyDiscount;
+  const total = subtotal + tax + deliveryFee - totalDiscount;
 
   const order = await prisma.order.create({
     data: {
@@ -271,8 +322,10 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
       subtotal,
       tax,
       deliveryFee,
-      discount: loyaltyDiscount,
+      discount: totalDiscount,
       total,
+      couponId,
+      freeDelivery,
       comment,
       scheduledAt: scheduledAt ? new Date(scheduledAt) : null,
       guestName: customerId ? undefined : guestName,
@@ -285,6 +338,14 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
       customer: { select: { id: true, name: true, email: true } },
     },
   });
+
+  // Increment coupon usage
+  if (couponId) {
+    await prisma.coupon.update({
+      where: { id: couponId },
+      data: { usageCount: { increment: 1 } },
+    });
+  }
 
   // Decrement stock for tracked items
   for (const item of items) {
