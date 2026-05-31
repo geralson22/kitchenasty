@@ -357,6 +357,7 @@ model Order {
 
   orderType   OrderType
   status      OrderStatus @default(PENDING)
+  paymentMethod PaymentMethod? @default(CASH)
 
   // Totals
   subtotal     Float

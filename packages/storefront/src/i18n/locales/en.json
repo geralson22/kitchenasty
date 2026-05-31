@@ -153,7 +153,28 @@
     "thankYou": "Thank you for your order.",
     "orderNumber": "Order Number",
     "trackOrder": "Track Order",
-    "orderMore": "Order More"
+    "orderMore": "Order More",
+    "contactOnWhatsApp": "Contact via WhatsApp"
+  },
+  "whatsapp": {
+    "title": "New Order",
+    "order": "Order",
+    "type": "Type",
+    "payment": "Payment",
+    "total": "Total",
+    "items": "Items",
+    "note": "Note",
+    "customer": "Customer",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "na": "N/A",
+    "delivery": "Delivery",
+    "pickup": "Pickup",
+    "cash": "Cash",
+    "stripe": "Credit Card",
+    "paypal": "PayPal",
+    "viewOrder": "View Order"
   },
   "orders": {
     "title": "Order History",

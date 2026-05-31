@@ -148,12 +148,33 @@
     "guestCheckout": "Ordina come Ospite",
     "guestEmail": "E-mail per aggiornamenti sull'ordine"
   },
-  "orderConfirmation": {
-    "title": "Ordine Effettuato!",
+"orderConfirmation": {
+    "title": "Ordine effettuato!",
     "thankYou": "Grazie per il tuo ordine.",
-    "orderNumber": "Numero Ordine",
-    "trackOrder": "Segui l'Ordine",
-    "orderMore": "Ordina Ancora"
+    "orderNumber": "Numero ordine",
+    "trackOrder": "Traccia ordine",
+    "orderMore": "Continua a ordinare",
+    "contactOnWhatsApp": "Contatta tramite WhatsApp"
+  },
+  "whatsapp": {
+    "title": "Nuovo Ordine",
+    "order": "Ordine",
+    "type": "Tipo",
+    "payment": "Pagamento",
+    "total": "Totale",
+    "items": "Articoli",
+    "note": "Nota",
+    "customer": "Cliente",
+    "phone": "Telefono",
+    "email": "Email",
+    "address": "Indirizzo",
+    "na": "N/A",
+    "delivery": "Consegna",
+    "pickup": "Ritiro",
+    "cash": "Contanti",
+    "stripe": "Carta",
+    "paypal": "PayPal",
+    "viewOrder": "Vedi Ordine"
   },
   "orders": {
     "title": "Cronologia Ordini",

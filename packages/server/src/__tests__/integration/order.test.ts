@@ -52,7 +52,7 @@ const validOrderBody = {
   orderType: 'PICKUP',
   items: [{ menuItemId: 'item-1', quantity: 2 }],
   guestName: 'Test Guest',
-  guestEmail: 'guest@test.com',
+  guestPhone: '2213145362',
 };
 
 const sampleOrder = {
@@ -194,10 +194,59 @@ describe('Order API - Integration Tests', () => {
         items: [{ menuItemId: 'item-1', quantity: 1 }],
         address: { line1: '123 Main St', city: 'Springfield', state: 'IL', zip: '62701' },
         guestName: 'Test Guest',
-        guestEmail: 'guest@test.com',
+        guestPhone: '2213145362',
       });
 
       expect(res.status).toBe(201);
+    });
+
+    it('creates order with payment method', async () => {
+      mockedPrisma.menuItem.findMany.mockResolvedValue([sampleMenuItem] as any);
+      mockedPrisma.location.findFirst.mockResolvedValue(sampleLocation as any);
+      mockedPrisma.order.create.mockResolvedValue({ ...sampleOrder, paymentMethod: 'STRIPE' } as any);
+      mockedPrisma.automationRule.findMany.mockResolvedValue([]);
+
+      const res = await request(app).post('/api/orders').send({
+        orderType: 'PICKUP',
+        items: [{ menuItemId: 'item-1', quantity: 1 }],
+        paymentMethod: 'STRIPE',
+        guestName: 'Test Guest',
+        guestPhone: '2213145362',
+      });
+
+      expect(res.status).toBe(201);
+    });
+
+    it('defaults to CASH payment method', async () => {
+      mockedPrisma.menuItem.findMany.mockResolvedValue([sampleMenuItem] as any);
+      mockedPrisma.location.findFirst.mockResolvedValue(sampleLocation as any);
+      mockedPrisma.order.create.mockResolvedValue({ ...sampleOrder, paymentMethod: 'CASH' } as any);
+      mockedPrisma.automationRule.findMany.mockResolvedValue([]);
+
+      const res = await request(app).post('/api/orders').send({
+        orderType: 'PICKUP',
+        items: [{ menuItemId: 'item-1', quantity: 1 }],
+        guestName: 'Test Guest',
+        guestPhone: '2213145362',
+      });
+
+      expect(res.status).toBe(201);
+    });
+
+    it('rejects invalid payment method', async () => {
+      mockedPrisma.menuItem.findMany.mockResolvedValue([sampleMenuItem] as any);
+      mockedPrisma.location.findFirst.mockResolvedValue(sampleLocation as any);
+
+      const res = await request(app).post('/api/orders').send({
+        orderType: 'PICKUP',
+        items: [{ menuItemId: 'item-1', quantity: 1 }],
+        paymentMethod: 'BITCOIN',
+        guestName: 'Test Guest',
+        guestPhone: '2213145362',
+      });
+
+      expect(res.status).toBe(400);
+      expect(res.body.error).toContain('paymentMethod');
     });
   });
 

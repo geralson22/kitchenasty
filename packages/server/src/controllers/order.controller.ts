@@ -28,7 +28,6 @@ const createOrderSchema = z.object({
   couponCode: z.string().optional(),
   address: z.object({
     line1: z.string().min(1),
-    line2: z.string().optional(),
     city: z.string().min(1),
     state: z.string().min(1),
     zip: z.string().min(1),
@@ -39,6 +38,7 @@ const createOrderSchema = z.object({
   guestEmail: z.string().email().optional(),
   guestPhone: z.string().optional(),
   loyaltyPointsRedeem: z.number().int().min(0).optional(),
+  paymentMethod: z.enum(['CASH', 'STRIPE', 'PAYPAL']).optional(),
 });
 
 function generateOrderNumber(): string {
@@ -55,7 +55,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  const { orderType, items, comment, scheduledAt, address, guestName, guestEmail, guestPhone, loyaltyPointsRedeem, couponCode } = parsed.data;
+  const { orderType, items, comment, scheduledAt, address, guestName, guestEmail, guestPhone, loyaltyPointsRedeem, couponCode, paymentMethod } = parsed.data;
 
   if (orderType === 'DELIVERY' && !address) {
     res.status(400).json({ success: false, error: 'Delivery address is required' });
@@ -65,10 +65,10 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
   // Get customer ID from auth if available
   const customerId = (req as any).user?.type === 'customer' ? (req as any).user.id : null;
 
-  // Guest checkout: require name + email if not authenticated
+  // Guest checkout: require name + phone if not authenticated
   if (!customerId) {
-    if (!guestName || !guestEmail) {
-      res.status(400).json({ success: false, error: 'Guest name and email are required for guest checkout' });
+    if (!guestName || !guestPhone) {
+      res.status(400).json({ success: false, error: 'Guest name and phone are required for guest checkout' });
       return;
     }
   }
@@ -319,6 +319,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
       customerId,
       locationId: location.id,
       orderType,
+      paymentMethod: paymentMethod || 'CASH',
       subtotal,
       tax,
       deliveryFee,

@@ -3,9 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '../context/CartContext.js';
 import { useAuth } from '../context/AuthContext.js';
+import { getWhatsAppUrl } from '../utils/whatsapp.js';
 
 type OrderType = 'delivery' | 'pickup';
-type PaymentMethod = 'cash' | 'stripe' | 'paypal';
+type PaymentMethod = 'CASH' | 'STRIPE' | 'PAYPAL';
 
 const TAX_RATE = 0.08;
 
@@ -16,8 +17,8 @@ export default function Checkout() {
   const navigate = useNavigate();
 
   const [orderType, setOrderType] = useState<OrderType>('delivery');
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash');
-  const [address, setAddress] = useState({ line1: '', line2: '', city: '', state: '', zip: '' });
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('CASH');
+  const [address, setAddress] = useState({ line1: '', city: 'La Plata', state: 'La Plata', zip: '1900' });
   const [scheduledAt, setScheduledAt] = useState('');
   const [comment, setComment] = useState('');
   const [couponCode, setCouponCode] = useState('');
@@ -158,7 +159,7 @@ export default function Checkout() {
       // Guest info
       if (!user) {
         body.guestName = guestName;
-        body.guestEmail = guestEmail;
+        if (guestEmail) body.guestEmail = guestEmail;
         body.guestPhone = guestPhone || undefined;
       }
 
@@ -179,6 +180,11 @@ export default function Checkout() {
       if (!res.ok) throw new Error(data.error || 'Failed to place order');
 
       clear();
+
+      const order = data.data;
+      const whatsappUrl = getWhatsAppUrl(order, orderType, t, window.location.origin);
+      window.open(whatsappUrl, '_blank');
+
       navigate(`/order/${data.data.id}`, { state: { order: data.data } });
     } catch (err: any) {
       setError(err.message || t('common.error'));
@@ -248,13 +254,6 @@ export default function Checkout() {
                   placeholder={t('checkout.addressLine1')}
                   value={address.line1}
                   onChange={(e) => setAddress({ ...address, line1: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
-                />
-                <input
-                  type="text"
-                  placeholder={t('checkout.addressLine2')}
-                  value={address.line2}
-                  onChange={(e) => setAddress({ ...address, line2: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
                 />
                 <div className="grid grid-cols-3 gap-3">
@@ -387,55 +386,6 @@ export default function Checkout() {
             </div>
           )}
 
-          {/* Payment method */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('checkout.paymentMethod')}</h2>
-            <div className="space-y-2">
-              <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
-                paymentMethod === 'cash'
-                  ? 'border-primary-600 bg-primary-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}>
-                <input
-                  type="radio"
-                  name="payment"
-                  checked={paymentMethod === 'cash'}
-                  onChange={() => setPaymentMethod('cash')}
-                  className="accent-primary-600"
-                />
-                <span className="text-sm font-medium text-gray-900">{t('checkout.cashOnDelivery')}</span>
-              </label>
-              <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
-                paymentMethod === 'stripe'
-                  ? 'border-primary-600 bg-primary-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}>
-                <input
-                  type="radio"
-                  name="payment"
-                  checked={paymentMethod === 'stripe'}
-                  onChange={() => setPaymentMethod('stripe')}
-                  className="accent-primary-600"
-                />
-                <span className="text-sm font-medium text-gray-900">{t('checkout.creditCard')}</span>
-              </label>
-              <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
-                paymentMethod === 'paypal'
-                  ? 'border-primary-600 bg-primary-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}>
-                <input
-                  type="radio"
-                  name="payment"
-                  checked={paymentMethod === 'paypal'}
-                  onChange={() => setPaymentMethod('paypal')}
-                  className="accent-primary-600"
-                />
-                <span className="text-sm font-medium text-gray-900">PayPal</span>
-              </label>
-            </div>
-          </div>
-
           {/* Guest info or login prompt */}
           {!user && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -456,23 +406,72 @@ export default function Checkout() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
                 />
                 <input
-                  type="email"
+                  type="tel"
                   required
-                  placeholder="Email address *"
-                  value={guestEmail}
-                  onChange={(e) => setGuestEmail(e.target.value)}
+                  placeholder="Phone number *"
+                  value={guestPhone}
+                  onChange={(e) => setGuestPhone(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
                 />
                 <input
-                  type="tel"
-                  placeholder="Phone number (optional)"
-                  value={guestPhone}
-                  onChange={(e) => setGuestPhone(e.target.value)}
+                  type="email"
+                  placeholder="Email address (optional)"
+                  value={guestEmail}
+                  onChange={(e) => setGuestEmail(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
                 />
               </div>
             </div>
           )}
+
+          {/* Payment method */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('checkout.paymentMethod')}</h2>
+            <div className="space-y-2">
+              <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
+paymentMethod === 'CASH'
+                  ? 'border-primary-600 bg-primary-50'
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}>
+                <input
+                  type="radio"
+                  name="payment"
+                  checked={paymentMethod === 'CASH'}
+                  onChange={() => setPaymentMethod('CASH')}
+                  className="accent-primary-600"
+                />
+                <span className="text-sm font-medium text-gray-900">{t('checkout.cashOnDelivery')}</span>
+              </label>
+              <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
+paymentMethod === 'STRIPE'
+                  ? 'border-primary-600 bg-primary-50'
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}>
+                <input
+                  type="radio"
+                  name="payment"
+                  checked={paymentMethod === 'STRIPE'}
+                  onChange={() => setPaymentMethod('STRIPE')}
+                  className="accent-primary-600"
+                />
+                <span className="text-sm font-medium text-gray-900">{t('checkout.creditCard')}</span>
+              </label>
+              <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
+paymentMethod === 'PAYPAL'
+                  ? 'border-primary-600 bg-primary-50'
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}>
+                <input
+                  type="radio"
+                  name="payment"
+                  checked={paymentMethod === 'PAYPAL'}
+                  onChange={() => setPaymentMethod('PAYPAL')}
+                  className="accent-primary-600"
+                />
+                <span className="text-sm font-medium text-gray-900">PayPal</span>
+              </label>
+            </div>
+          </div>
         </div>
 
         {/* Right: Order summary */}

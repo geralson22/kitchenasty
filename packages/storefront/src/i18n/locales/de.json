@@ -148,12 +148,33 @@
     "guestCheckout": "Als Gast Bestellen",
     "guestEmail": "E-Mail für Bestellupdates"
   },
-  "orderConfirmation": {
-    "title": "Bestellung Aufgegeben!",
+"orderConfirmation": {
+    "title": "Bestellung aufgegeben!",
     "thankYou": "Vielen Dank für Ihre Bestellung.",
     "orderNumber": "Bestellnummer",
-    "trackOrder": "Bestellung Verfolgen",
-    "orderMore": "Erneut Bestellen"
+    "trackOrder": "Bestellung verfolgen",
+    "orderMore": "Weiter bestellen",
+    "contactOnWhatsApp": "Per WhatsApp kontaktieren"
+  },
+  "whatsapp": {
+    "title": "Neue Bestellung",
+    "order": "Bestellung",
+    "type": "Typ",
+    "payment": "Zahlung",
+    "total": "Gesamt",
+    "items": "Artikel",
+    "note": "Hinweis",
+    "customer": "Kunde",
+    "phone": "Telefon",
+    "email": "E-Mail",
+    "address": "Adresse",
+    "na": "N/A",
+    "delivery": "Lieferung",
+    "pickup": "Abholung",
+    "cash": "Bargeld",
+    "stripe": "Karte",
+    "paypal": "PayPal",
+    "viewOrder": "Bestellung Ansehen"
   },
   "orders": {
     "title": "Bestellverlauf",

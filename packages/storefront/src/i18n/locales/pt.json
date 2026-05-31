@@ -148,12 +148,33 @@
     "guestCheckout": "Pedir como Visitante",
     "guestEmail": "E-mail para atualizações do pedido"
   },
-  "orderConfirmation": {
-    "title": "Pedido Realizado!",
+"orderConfirmation": {
+    "title": "Pedido realizado!",
     "thankYou": "Obrigado pelo seu pedido.",
-    "orderNumber": "Número do Pedido",
-    "trackOrder": "Acompanhar Pedido",
-    "orderMore": "Pedir Mais"
+    "orderNumber": "Número do pedido",
+    "trackOrder": "Rastrear pedido",
+    "orderMore": "Continuar pedindo",
+    "contactOnWhatsApp": "Contactar por WhatsApp"
+  },
+  "whatsapp": {
+    "title": "Novo Pedido",
+    "order": "Pedido",
+    "type": "Tipo",
+    "payment": "Pagamento",
+    "total": "Total",
+    "items": "Itens",
+    "note": "Nota",
+    "customer": "Cliente",
+    "phone": "Telefone",
+    "email": "Email",
+    "address": "Endereço",
+    "na": "N/A",
+    "delivery": "Entrega",
+    "pickup": "Retirada",
+    "cash": "Dinheiro",
+    "stripe": "Cartão",
+    "paypal": "PayPal",
+    "viewOrder": "Ver Pedido"
   },
   "orders": {
     "title": "Histórico de Pedidos",
