@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext.js';
 import { getWhatsAppUrl } from '../utils/whatsapp.js';
 
 type OrderType = 'delivery' | 'pickup';
-type PaymentMethod = 'CASH' | 'STRIPE' | 'PAYPAL';
+type PaymentMethod = 'CASH' | 'STRIPE' | 'PAYPAL' | 'TRANSFER';
 
 const TAX_RATE = 0.08;
 
@@ -28,6 +28,7 @@ export default function Checkout() {
   const [couponLoading, setCouponLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [paymentSettings, setPaymentSettings] = useState({ stripeEnabled: false, paypalEnabled: false, cashEnabled: true, transferEnabled: true });
 
   // Guest checkout fields
   const [guestName, setGuestName] = useState('');
@@ -89,6 +90,23 @@ export default function Checkout() {
         if (loc?.isBusy) {
           setIsBusy(true);
           setBusyMessage(loc.busyMessage || 'This location is currently not accepting orders.');
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  // Fetch payment settings
+  useEffect(() => {
+    fetch('/api/settings/payment')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.data) {
+          setPaymentSettings({
+            stripeEnabled: data.data.stripeEnabled || false,
+            paypalEnabled: data.data.paypalEnabled || false,
+            cashEnabled: data.data.cashEnabled ?? true,
+            transferEnabled: data.data.transferEnabled ?? true,
+          });
         }
       })
       .catch(() => {});
@@ -423,52 +441,74 @@ export default function Checkout() {
             </div>
           )}
 
-          {/* Payment method */}
+{/* Payment method */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('checkout.paymentMethod')}</h2>
             <div className="space-y-2">
-              <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
-paymentMethod === 'CASH'
-                  ? 'border-primary-600 bg-primary-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}>
-                <input
-                  type="radio"
-                  name="payment"
-                  checked={paymentMethod === 'CASH'}
-                  onChange={() => setPaymentMethod('CASH')}
-                  className="accent-primary-600"
-                />
-                <span className="text-sm font-medium text-gray-900">{t('checkout.cashOnDelivery')}</span>
-              </label>
-              <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
-paymentMethod === 'STRIPE'
-                  ? 'border-primary-600 bg-primary-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}>
-                <input
-                  type="radio"
-                  name="payment"
-                  checked={paymentMethod === 'STRIPE'}
-                  onChange={() => setPaymentMethod('STRIPE')}
-                  className="accent-primary-600"
-                />
-                <span className="text-sm font-medium text-gray-900">{t('checkout.creditCard')}</span>
-              </label>
-              <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
-paymentMethod === 'PAYPAL'
-                  ? 'border-primary-600 bg-primary-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}>
-                <input
-                  type="radio"
-                  name="payment"
-                  checked={paymentMethod === 'PAYPAL'}
-                  onChange={() => setPaymentMethod('PAYPAL')}
-                  className="accent-primary-600"
-                />
-                <span className="text-sm font-medium text-gray-900">{t('checkout.paypal')}</span>
-              </label>
+              {paymentSettings.cashEnabled && (
+                <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
+                  paymentMethod === 'CASH'
+                    ? 'border-primary-600 bg-primary-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}>
+                  <input
+                    type="radio"
+                    name="payment"
+                    checked={paymentMethod === 'CASH'}
+                    onChange={() => setPaymentMethod('CASH')}
+                    className="accent-primary-600"
+                  />
+                  <span className="text-sm font-medium text-gray-900">{t('checkout.cashOnDelivery')}</span>
+                </label>
+              )}
+              {paymentSettings.stripeEnabled && (
+                <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
+                  paymentMethod === 'STRIPE'
+                    ? 'border-primary-600 bg-primary-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}>
+                  <input
+                    type="radio"
+                    name="payment"
+                    checked={paymentMethod === 'STRIPE'}
+                    onChange={() => setPaymentMethod('STRIPE')}
+                    className="accent-primary-600"
+                  />
+                  <span className="text-sm font-medium text-gray-900">{t('checkout.creditCard')}</span>
+                </label>
+              )}
+              {paymentSettings.paypalEnabled && (
+                <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
+                  paymentMethod === 'PAYPAL'
+                    ? 'border-primary-600 bg-primary-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}>
+                  <input
+                    type="radio"
+                    name="payment"
+                    checked={paymentMethod === 'PAYPAL'}
+                    onChange={() => setPaymentMethod('PAYPAL')}
+                    className="accent-primary-600"
+                  />
+                  <span className="text-sm font-medium text-gray-900">{t('checkout.paypal')}</span>
+                </label>
+              )}
+              {paymentSettings.transferEnabled && (
+                <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
+                  paymentMethod === 'TRANSFER'
+                    ? 'border-primary-600 bg-primary-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}>
+                  <input
+                    type="radio"
+                    name="payment"
+                    checked={paymentMethod === 'TRANSFER'}
+                    onChange={() => setPaymentMethod('TRANSFER')}
+                    className="accent-primary-600"
+                  />
+                  <span className="text-sm font-medium text-gray-900">{t('checkout.transfer')}</span>
+                </label>
+              )}
             </div>
           </div>
         </div>

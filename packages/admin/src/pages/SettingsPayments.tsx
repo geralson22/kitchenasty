@@ -23,6 +23,9 @@ export default function SettingsPayments() {
   // Cash
   const [cashEnabled, setCashEnabled] = useState(true);
 
+  // Transfer
+  const [transferEnabled, setTransferEnabled] = useState(true);
+
   useEffect(() => {
     fetch('/api/settings/payment', { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => r.json())
@@ -38,6 +41,7 @@ export default function SettingsPayments() {
           if (d.paypalClientSecret) setPaypalClientSecret(d.paypalClientSecret);
           if (d.paypalSandbox !== undefined) setPaypalSandbox(d.paypalSandbox);
           if (d.cashEnabled !== undefined) setCashEnabled(d.cashEnabled);
+          if (d.transferEnabled !== undefined) setTransferEnabled(d.transferEnabled);
         }
       })
       .catch(() => {})
@@ -55,7 +59,7 @@ export default function SettingsPayments() {
         body: JSON.stringify({
           stripeEnabled, stripePublishableKey, stripeSecretKey, stripeWebhookSecret,
           paypalEnabled, paypalClientId, paypalClientSecret, paypalSandbox,
-          cashEnabled,
+          cashEnabled, transferEnabled,
         }),
       });
       const data = await res.json();
@@ -150,6 +154,17 @@ export default function SettingsPayments() {
           <h2 className="text-lg font-semibold text-gray-900">Cash on Delivery</h2>
           <label className="flex items-center gap-2">
             <input type="checkbox" checked={cashEnabled} onChange={(e) => setCashEnabled(e.target.checked)} className="w-4 h-4 text-primary-600 rounded" />
+            <span className="text-sm text-gray-700">Enabled</span>
+          </label>
+        </div>
+      </div>
+
+      {/* Transfer */}
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-gray-900">Bank Transfer</h2>
+          <label className="flex items-center gap-2">
+            <input type="checkbox" checked={transferEnabled} onChange={(e) => setTransferEnabled(e.target.checked)} className="w-4 h-4 text-primary-600 rounded" />
             <span className="text-sm text-gray-700">Enabled</span>
           </label>
         </div>

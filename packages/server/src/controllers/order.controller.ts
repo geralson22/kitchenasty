@@ -38,7 +38,7 @@ const createOrderSchema = z.object({
   guestEmail: z.string().email().optional(),
   guestPhone: z.string().optional(),
   loyaltyPointsRedeem: z.number().int().min(0).optional(),
-  paymentMethod: z.enum(['CASH', 'STRIPE', 'PAYPAL']).optional(),
+  paymentMethod: z.enum(['CASH', 'STRIPE', 'PAYPAL', 'TRANSFER']).optional(),
 });
 
 function generateOrderNumber(): string {

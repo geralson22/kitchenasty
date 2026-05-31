@@ -148,6 +148,7 @@
     "creditCard": "Tarjeta de Crédito (Stripe)",
     "cashOnDelivery": "Pago contra entrega",
     "paypal": "PayPal",
+    "transfer": "Transferencia",
     "orderSummary": "Resumen del Pedido",
     "subtotal": "Subtotal",
     "tax": "Impuesto",
@@ -195,6 +196,7 @@
     "cash": "Efectivo",
     "stripe": "Tarjeta",
     "paypal": "PayPal",
+    "transfer": "Transferencia",
     "viewOrder": "Ver Pedido"
   },
   "orders": {

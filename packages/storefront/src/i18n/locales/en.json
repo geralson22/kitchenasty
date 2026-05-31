@@ -148,6 +148,7 @@
     "creditCard": "Credit Card (Stripe)",
     "cashOnDelivery": "Cash on Delivery",
     "paypal": "PayPal",
+    "transfer": "Bank Transfer",
     "orderSummary": "Order Summary",
     "subtotal": "Subtotal",
     "tax": "Tax",
@@ -195,6 +196,7 @@
     "cash": "Cash",
     "stripe": "Credit Card",
     "paypal": "PayPal",
+    "transfer": "Transfer",
     "viewOrder": "View Order"
   },
   "orders": {

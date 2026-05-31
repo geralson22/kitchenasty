@@ -220,6 +220,7 @@ const paymentSettingsSchema = z.object({
   paypalClientSecret: z.string().optional(),
   paypalSandbox: z.boolean().optional(),
   cashEnabled: z.boolean().optional(),
+  transferEnabled: z.boolean().optional(),
 });
 
 const reviewSettingsSchema = z.object({

@@ -148,6 +148,7 @@
     "creditCard": "Carta di Credito (Stripe)",
     "cashOnDelivery": "Pagamento alla consegna",
     "paypal": "PayPal",
+    "transfer": "Bonifico",
     "orderSummary": "Riepilogo Ordine",
     "subtotal": "Subtotale",
     "tax": "IVA",
@@ -195,6 +196,7 @@
     "cash": "Contanti",
     "stripe": "Carta",
     "paypal": "PayPal",
+    "transfer": "Bonifico",
     "viewOrder": "Vedi Ordine"
   },
   "orders": {

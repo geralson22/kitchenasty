@@ -148,6 +148,7 @@
     "creditCard": "Kreditkarte (Stripe)",
     "cashOnDelivery": "Barzahlung bei Lieferung",
     "paypal": "PayPal",
+    "transfer": "Überweisung",
     "orderSummary": "Bestellübersicht",
     "subtotal": "Zwischensumme",
     "tax": "MwSt.",
@@ -195,6 +196,7 @@
     "cash": "Bargeld",
     "stripe": "Karte",
     "paypal": "PayPal",
+    "transfer": "Überweisung",
     "viewOrder": "Bestellung Ansehen"
   },
   "orders": {

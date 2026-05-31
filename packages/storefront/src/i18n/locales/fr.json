@@ -148,6 +148,7 @@
     "creditCard": "Carte Bancaire (Stripe)",
     "cashOnDelivery": "Paiement à la livraison",
     "paypal": "PayPal",
+    "transfer": "Virement",
     "orderSummary": "Récapitulatif",
     "subtotal": "Sous-total",
     "tax": "TVA",
@@ -195,6 +196,7 @@
     "cash": "Espèces",
     "stripe": "Carte",
     "paypal": "PayPal",
+    "transfer": "Virement",
     "viewOrder": "Voir la Commande"
   },
   "orders": {
