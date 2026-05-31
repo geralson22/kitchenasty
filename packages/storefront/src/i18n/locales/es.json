@@ -27,7 +27,7 @@
   },
   "home": {
     "heroTitle": "Pide Comida Deliciosa en Línea",
-    "heroDescription": "Explora nuestro menú, haz tu pedido para entrega o recogida, y disfruta de comidas frescas y preparadas al momento de KitchenAsty.",
+    "heroDescription": "Explora nuestro menú, haz tu pedido para entrega o delivery, y disfruta de comidas frescas y preparadas al momento de KitchenAsty.",
     "viewMenu": "Ver Menú",
     "findLocation": "Encontrar Ubicación",
     "fastDelivery": "Entrega Rápida",
@@ -43,7 +43,7 @@
     "whyChooseUsDesc": "Descubre lo que nos hace especiales"
   },
   "footer": {
-    "description": "Pide comida deliciosa en línea para entrega o recogida de tus restaurantes locales favoritos.",
+    "description": "Pide comida deliciosa en línea para entrega o delivery de tus restaurantes locales favoritos.",
     "quickLinks": "Enlaces Rápidos",
     "account": "Cuenta",
     "createAccount": "Crear Cuenta",
@@ -128,7 +128,7 @@
     "browseMenu": "Ver Menú",
     "orderType": "Tipo de Pedido",
     "delivery": "Entrega",
-    "pickup": "Recogida",
+    "pickup": "delivery",
     "deliveryAddress": "Dirección de Entrega",
     "addressLine1": "Dirección Línea 1",
     "addressLine2": "Dirección Línea 2 (opcional)",
@@ -168,9 +168,15 @@
     "loginForFasterCheckout": "para un pago más rápido, o continúa como invitado:",
     "fullName": "Nombre completo *",
     "phoneNumber": "Número de teléfono *",
-    "emailAddress": "Correo electrónico (opcional)"
+    "emailAddress": "Correo electrónico (opcional)",
+    "selectDeliveryZone": "Zona de Entrega",
+    "selectZone": "Selecciona una zona...",
+    "selectZoneError": "Por favor selecciona una zona de entrega",
+    "minOrderError": "Pedido mínimo para",
+    "minOrderDelivery": "pedido mínimo entrega",
+    "couponAppliedSuccess": "¡Cupón aplicado!"
   },
-"orderConfirmation": {
+  "orderConfirmation": {
     "title": "¡Pedido Realizado!",
     "thankYou": "Gracias por tu pedido.",
     "orderNumber": "Número de Pedido",

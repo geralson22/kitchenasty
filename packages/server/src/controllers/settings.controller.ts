@@ -383,6 +383,19 @@ export async function getPaymentSettings(_req: Request, res: Response): Promise<
   });
 }
 
+export async function getPublicPaymentSettings(_req: Request, res: Response): Promise<void> {
+  const data = await getSettingsGroup('paymentSettings');
+  res.json({
+    success: true,
+    data: {
+      stripeEnabled: data.stripeEnabled ?? false,
+      paypalEnabled: data.paypalEnabled ?? false,
+      cashEnabled: data.cashEnabled ?? true,
+      transferEnabled: data.transferEnabled ?? false,
+    },
+  });
+}
+
 export async function updatePaymentSettings(req: Request, res: Response): Promise<void> {
   const parsed = paymentSettingsSchema.safeParse(req.body);
   if (!parsed.success) {

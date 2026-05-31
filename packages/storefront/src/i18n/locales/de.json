@@ -168,9 +168,15 @@
     "loginForFasterCheckout": "für eine schnellere Bezahlung, oder fahren Sie als Gast fort:",
     "fullName": "Vollständiger Name *",
     "phoneNumber": "Telefonnummer *",
-    "emailAddress": "E-Mail-Adresse (optional)"
+    "emailAddress": "E-Mail-Adresse (optional)",
+    "selectDeliveryZone": "Lieferzone",
+    "selectZone": "Wählen Sie eine Zone...",
+    "selectZoneError": "Bitte wählen Sie eine Lieferzone",
+    "minOrderError": "Mindestbestellung für",
+    "minOrderDelivery": "mindestbestellung lieferung",
+    "couponAppliedSuccess": "Gutschein angewendet!"
   },
-"orderConfirmation": {
+  "orderConfirmation": {
     "title": "Bestellung aufgegeben!",
     "thankYou": "Vielen Dank für Ihre Bestellung.",
     "orderNumber": "Bestellnummer",

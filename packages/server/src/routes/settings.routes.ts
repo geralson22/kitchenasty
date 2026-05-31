@@ -16,6 +16,7 @@ import {
   updateMailSettings,
   sendTestEmail,
   getPaymentSettings,
+  getPublicPaymentSettings,
   updatePaymentSettings,
   getReviewSettings,
   updateReviewSettings,
@@ -51,6 +52,7 @@ router.post('/mail/test', authenticate, requireRole('SUPER_ADMIN'), sendTestEmai
 // Payment — SUPER_ADMIN only
 router.get('/payment', authenticate, requireRole('SUPER_ADMIN'), getPaymentSettings);
 router.put('/payment', authenticate, requireRole('SUPER_ADMIN'), updatePaymentSettings);
+router.get('/payment/public', getPublicPaymentSettings);
 
 // Review — MANAGER+
 router.get('/review', authenticate, requireRole('SUPER_ADMIN', 'MANAGER'), getReviewSettings);

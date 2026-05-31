@@ -7,6 +7,14 @@ import { auditLog } from '../lib/audit.js';
 // VALIDATION SCHEMAS
 // ============================================================
 
+const deliveryZoneSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().min(1),
+  charge: z.number().min(0),
+  minOrder: z.number().min(0),
+  isActive: z.boolean().default(true),
+});
+
 const createLocationSchema = z.object({
   name: z.string().min(1),
   slug: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Slug must be lowercase alphanumeric with hyphens'),
@@ -36,6 +44,7 @@ const createLocationSchema = z.object({
     closeTime: z.string().regex(/^\d{2}:\d{2}$/),
     isClosed: z.boolean().default(false),
   })).optional(),
+  deliveryZones: z.array(deliveryZoneSchema).optional(),
 });
 
 const updateLocationSchema = createLocationSchema.partial().omit({ slug: true });
@@ -102,7 +111,7 @@ export async function createLocation(req: Request, res: Response): Promise<void>
     return;
   }
 
-  const { operatingHours, ...data } = parsed.data;
+  const { operatingHours, deliveryZones, ...data } = parsed.data;
 
   const existing = await prisma.location.findUnique({ where: { slug: data.slug } });
   if (existing) {
@@ -119,12 +128,27 @@ export async function createLocation(req: Request, res: Response): Promise<void>
     },
     include: {
       operatingHours: { orderBy: { dayOfWeek: 'asc' } },
+      deliveryZones: { orderBy: { name: 'asc' } },
+    },
+  });
+
+  if (deliveryZones?.length) {
+    await prisma.deliveryZone.createMany({
+      data: deliveryZones.map((z) => ({ ...z, locationId: location.id })),
+    });
+  }
+
+  const updatedLocation = await prisma.location.findUnique({
+    where: { id: location.id },
+    include: {
+      operatingHours: { orderBy: { dayOfWeek: 'asc' } },
+      deliveryZones: { orderBy: { name: 'asc' } },
     },
   });
 
   auditLog(req, { action: 'create', entity: 'Location', entityId: location.id, details: { name: location.name } });
 
-  res.status(201).json({ success: true, data: location });
+  res.status(201).json({ success: true, data: updatedLocation });
 }
 
 export async function updateLocation(req: Request<{ id: string }>, res: Response): Promise<void> {
@@ -141,7 +165,7 @@ export async function updateLocation(req: Request<{ id: string }>, res: Response
     return;
   }
 
-  const { operatingHours, ...data } = parsed.data;
+  const { operatingHours, deliveryZones, ...data } = parsed.data;
 
   const location = await prisma.location.update({
     where: { id },
@@ -154,12 +178,44 @@ export async function updateLocation(req: Request<{ id: string }>, res: Response
     },
     include: {
       operatingHours: { orderBy: { dayOfWeek: 'asc' } },
+      deliveryZones: { orderBy: { name: 'asc' } },
+    },
+  });
+
+  if (deliveryZones !== undefined) {
+    const existingZoneIds = location.deliveryZones.map((z) => z.id);
+    const submittedZoneIds = deliveryZones.filter((z) => z.id).map((z) => z.id as string);
+
+    const toDelete = existingZoneIds.filter((zid) => !submittedZoneIds.includes(zid));
+    if (toDelete.length) {
+      await prisma.deliveryZone.deleteMany({ where: { id: { in: toDelete }, locationId: id } });
+    }
+
+    for (const zone of deliveryZones) {
+      if (zone.id) {
+        await prisma.deliveryZone.update({
+          where: { id: zone.id },
+          data: { name: zone.name, charge: zone.charge, minOrder: zone.minOrder, isActive: zone.isActive },
+        });
+      } else {
+        await prisma.deliveryZone.create({
+          data: { ...zone, locationId: id },
+        });
+      }
+    }
+  }
+
+  const updatedLocation = await prisma.location.findUnique({
+    where: { id },
+    include: {
+      operatingHours: { orderBy: { dayOfWeek: 'asc' } },
+      deliveryZones: { orderBy: { name: 'asc' } },
     },
   });
 
   auditLog(req, { action: 'update', entity: 'Location', entityId: id, details: data });
 
-  res.json({ success: true, data: location });
+  res.json({ success: true, data: updatedLocation });
 }
 
 export async function deleteLocation(req: Request<{ id: string }>, res: Response): Promise<void> {

@@ -168,9 +168,15 @@
     "loginForFasterCheckout": "per un pagamento più veloce, o continua come ospite:",
     "fullName": "Nome completo *",
     "phoneNumber": "Numero di telefono *",
-    "emailAddress": "Indirizzo e-mail (opzionale)"
+    "emailAddress": "Indirizzo e-mail (opzionale)",
+    "selectDeliveryZone": "Zona di Consegna",
+    "selectZone": "Seleziona una zona...",
+    "selectZoneError": "Seleziona una zona di consegna",
+    "minOrderError": "Ordine minimo per",
+    "minOrderDelivery": "ordine minimo consegna",
+    "couponAppliedSuccess": "Coupon applicato!"
   },
-"orderConfirmation": {
+  "orderConfirmation": {
     "title": "Ordine effettuato!",
     "thankYou": "Grazie per il tuo ordine.",
     "orderNumber": "Numero ordine",

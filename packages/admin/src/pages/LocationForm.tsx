@@ -141,6 +141,7 @@ export default function LocationForm() {
         deliveryLeadTime: Number(form.deliveryLeadTime),
         pickupLeadTime: Number(form.pickupLeadTime),
         operatingHours: hours,
+        deliveryZones: zones,
       };
 
       if (isEdit) {

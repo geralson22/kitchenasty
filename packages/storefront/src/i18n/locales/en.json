@@ -168,7 +168,13 @@
     "loginForFasterCheckout": "for faster checkout, or continue as guest:",
     "fullName": "Full name *",
     "phoneNumber": "Phone number *",
-    "emailAddress": "Email address (optional)"
+    "emailAddress": "Email address (optional)",
+    "selectDeliveryZone": "Delivery Zone",
+    "selectZone": "Select a zone...",
+    "selectZoneError": "Please select a delivery zone",
+    "minOrderError": "Minimum order for",
+    "minOrderDelivery": "min order delivery",
+    "couponAppliedSuccess": "Coupon applied!"
   },
   "orderConfirmation": {
     "title": "Order Placed!",

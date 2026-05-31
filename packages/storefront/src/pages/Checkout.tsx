@@ -1,7 +1,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useCart } from '../context/CartContext.js';
+import { useCart, useToast } from '../context/CartContext.js';
 import { useAuth } from '../context/AuthContext.js';
 import { getWhatsAppUrl } from '../utils/whatsapp.js';
 
@@ -15,10 +15,14 @@ export default function Checkout() {
   const { items, subtotal, clear } = useCart();
   const { user, token } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const [orderType, setOrderType] = useState<OrderType>('delivery');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('CASH');
-  const [address, setAddress] = useState({ line1: '', city: 'La Plata', state: 'La Plata', zip: '1900' });
+  const [address, setAddress] = useState(() => {
+    const saved = localStorage.getItem('checkoutAddress');
+    return saved ? JSON.parse(saved) : { line1: '', city: 'La Plata', state: 'La Plata', zip: '1900' };
+  });
   const [scheduledAt, setScheduledAt] = useState('');
   const [comment, setComment] = useState('');
   const [couponCode, setCouponCode] = useState('');
@@ -31,9 +35,9 @@ export default function Checkout() {
   const [paymentSettings, setPaymentSettings] = useState({ stripeEnabled: false, paypalEnabled: false, cashEnabled: true, transferEnabled: true });
 
   // Guest checkout fields
-  const [guestName, setGuestName] = useState('');
-  const [guestEmail, setGuestEmail] = useState('');
-  const [guestPhone, setGuestPhone] = useState('');
+  const [guestName, setGuestName] = useState(() => localStorage.getItem('checkoutGuestName') || '');
+  const [guestEmail, setGuestEmail] = useState(() => localStorage.getItem('checkoutGuestEmail') || '');
+  const [guestPhone, setGuestPhone] = useState(() => localStorage.getItem('checkoutGuestPhone') || '');
 
   // Dynamic delivery fee from zone check
   const [deliveryFee, setDeliveryFee] = useState(4.99);
@@ -47,6 +51,10 @@ export default function Checkout() {
   const [loyaltyBalance, setLoyaltyBalance] = useState(0);
   const [loyaltyRedeem, setLoyaltyRedeem] = useState(0);
   const loyaltyDiscount = loyaltyRedeem / 100;
+
+  // Delivery zones
+  const [availableZones, setAvailableZones] = useState<{ id: string; name: string; charge: number; minOrder: number; isActive: boolean }[]>([]);
+  const [selectedZoneId, setSelectedZoneId] = useState('');
 
   // Coupon apply handler
   async function handleApplyCoupon() {
@@ -63,6 +71,7 @@ export default function Checkout() {
       if (data.success && data.data) {
         setCouponDiscount(data.data.discount);
         setCouponFreeDelivery(data.data.freeDelivery);
+        showToast('checkout.couponAppliedSuccess', {}, 'info');
       } else {
         setCouponError(data.error || 'Invalid coupon');
         setCouponDiscount(0);
@@ -81,7 +90,7 @@ export default function Checkout() {
   const currentDeliveryFee = orderType === 'delivery' && !couponFreeDelivery ? deliveryFee : 0;
   const total = subtotal + tax + currentDeliveryFee - loyaltyDiscount - couponDiscount;
 
-  // Check busy mode on mount
+  // Check busy mode + fetch delivery zones on mount
   useEffect(() => {
     fetch('/api/locations')
       .then((res) => res.json())
@@ -91,13 +100,23 @@ export default function Checkout() {
           setIsBusy(true);
           setBusyMessage(loc.busyMessage || 'This location is currently not accepting orders.');
         }
+        if (loc?.id) {
+          fetch(`/api/locations/${loc.id}/delivery-zones`)
+            .then((res) => res.json())
+            .then((zonesData) => {
+              if (zonesData.success) {
+                setAvailableZones(zonesData.data.filter((z: any) => z.isActive));
+              }
+            })
+            .catch(() => {});
+        }
       })
       .catch(() => {});
   }, []);
 
   // Fetch payment settings
   useEffect(() => {
-    fetch('/api/settings/payment')
+    fetch('/api/settings/payment/public')
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.data) {
@@ -171,7 +190,19 @@ export default function Checkout() {
       }
 
       if (orderType === 'delivery') {
+        if (!selectedZoneId) {
+          setError(t('checkout.selectZoneError') || 'Please select a delivery zone');
+          setLoading(false);
+          return;
+        }
+        const selectedZone = availableZones.find((z) => z.id === selectedZoneId);
+        if (selectedZone && subtotal < selectedZone.minOrder) {
+          setError(`${t('checkout.minOrderError') || 'Minimum order for'} ${selectedZone.name}: $${selectedZone.minOrder.toFixed(2)}`);
+          setLoading(false);
+          return;
+        }
         body.address = address;
+        body.deliveryZoneId = selectedZoneId;
       }
 
       // Guest info
@@ -246,7 +277,7 @@ export default function Checkout() {
               </button>
               <button
                 type="button"
-                onClick={() => setOrderType('pickup')}
+                onClick={() => { setOrderType('pickup'); setSelectedZoneId(''); setDeliveryFee(0); }}
                 className={`flex-1 py-3 rounded-lg font-medium text-sm border-2 transition-colors ${
                   orderType === 'pickup'
                     ? 'border-primary-600 bg-primary-50 text-primary-700'
@@ -271,35 +302,60 @@ export default function Checkout() {
                   required
                   placeholder={t('checkout.addressLine1')}
                   value={address.line1}
-                  onChange={(e) => setAddress({ ...address, line1: e.target.value })}
+                  onChange={(e) => { const next = { ...address, line1: e.target.value }; setAddress(next); localStorage.setItem('checkoutAddress', JSON.stringify(next)); }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
                 />
                 <div className="grid grid-cols-3 gap-3">
                   <input
                     type="text"
                     required
-                    placeholder={t('checkout.city')}
-                    value={address.city}
-                    onChange={(e) => setAddress({ ...address, city: e.target.value })}
-                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
-                  />
-                  <input
-                    type="text"
-                    required
-                    placeholder={t('checkout.state')}
-                    value={address.state}
-                    onChange={(e) => setAddress({ ...address, state: e.target.value })}
-                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
-                  />
-                  <input
-                    type="text"
-                    required
-                    placeholder={t('checkout.zipCode')}
-                    value={address.zip}
-                    onChange={(e) => setAddress({ ...address, zip: e.target.value })}
+                  placeholder={t('checkout.city')}
+                  value={address.city}
+                  onChange={(e) => { const next = { ...address, city: e.target.value }; setAddress(next); localStorage.setItem('checkoutAddress', JSON.stringify(next)); }}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
+                />
+                <input
+                  type="text"
+                  required
+                  placeholder={t('checkout.state')}
+                  value={address.state}
+                  onChange={(e) => { const next = { ...address, state: e.target.value }; setAddress(next); localStorage.setItem('checkoutAddress', JSON.stringify(next)); }}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
+                />
+                <input
+                  type="text"
+                  required
+                  placeholder={t('checkout.zipCode')}
+                  value={address.zip}
+                  onChange={(e) => { const next = { ...address, zip: e.target.value }; setAddress(next); localStorage.setItem('checkoutAddress', JSON.stringify(next)); }}
                     className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
                   />
                 </div>
+                {availableZones.length > 0 && (
+                  <div className="mt-3">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {t('checkout.selectDeliveryZone') || 'Delivery Zone'}
+                    </label>
+                    <select
+                      value={selectedZoneId}
+                      onChange={(e) => {
+                        setSelectedZoneId(e.target.value);
+                        const zone = availableZones.find((z) => z.id === e.target.value);
+                        setDeliveryFee(zone ? zone.charge : 4.99);
+                        setZoneError('');
+                      }}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
+                    >
+                      <option value="">{t('checkout.selectZone') || 'Select a zone...'}</option>
+                      {availableZones.map((zone) => (
+                        <option key={zone.id} value={zone.id}>
+                          {zone.name} — ${zone.charge.toFixed(2)}{zone.minOrder > 0 ? ` (${t('checkout.minOrderDelivery')} $${zone.minOrder.toFixed(2)})` : ''}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -350,31 +406,6 @@ export default function Checkout() {
             />
           </div>
 
-          {/* Coupon */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('checkout.couponCode')}</h2>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
-              />
-              <button
-                type="button"
-                onClick={handleApplyCoupon}
-                disabled={couponLoading}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-              >
-                {couponLoading ? '...' : t('checkout.apply')}
-              </button>
-            </div>
-            {couponError && <p className="text-red-500 text-xs mt-1">{couponError}</p>}
-            {!couponError && couponDiscount > 0 && (
-              <p className="text-green-600 text-xs mt-1">{t('checkout.couponAppliedDiscount').replace('${amount}', `-$${couponDiscount.toFixed(2)}`)}</p>
-            )}
-          </div>
-
           {/* Loyalty Points Redemption */}
           {user && loyaltyBalance > 0 && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -407,19 +438,13 @@ export default function Checkout() {
           {!user && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('checkout.contactInformation')}</h2>
-              <p className="text-sm text-gray-600 mb-3">
-                <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium underline">
-                  {t('nav.login')}
-                </Link>{' '}
-                {t('checkout.loginForFasterCheckout')}
-              </p>
               <div className="space-y-3">
                 <input
                   type="text"
                   required
                   placeholder={t('checkout.fullName')}
                   value={guestName}
-                  onChange={(e) => setGuestName(e.target.value)}
+                  onChange={(e) => { setGuestName(e.target.value); localStorage.setItem('checkoutGuestName', e.target.value); }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
                 />
                 <input
@@ -427,21 +452,46 @@ export default function Checkout() {
                   required
                   placeholder={t('checkout.phoneNumber')}
                   value={guestPhone}
-                  onChange={(e) => setGuestPhone(e.target.value)}
+                  onChange={(e) => { setGuestPhone(e.target.value); localStorage.setItem('checkoutGuestPhone', e.target.value); }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
                 />
                 <input
                   type="email"
                   placeholder={t('checkout.emailAddress')}
                   value={guestEmail}
-                  onChange={(e) => setGuestEmail(e.target.value)}
+                  onChange={(e) => { setGuestEmail(e.target.value); localStorage.setItem('checkoutGuestEmail', e.target.value); }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
                 />
               </div>
             </div>
           )}
 
-{/* Payment method */}
+{/* Coupon */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('checkout.couponCode')}</h2>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
+              />
+              <button
+                type="button"
+                onClick={handleApplyCoupon}
+                disabled={couponLoading}
+                className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+              >
+                {couponLoading ? '...' : t('checkout.apply')}
+              </button>
+            </div>
+            {couponError && <p className="text-red-500 text-xs mt-1">{couponError}</p>}
+            {!couponError && couponDiscount > 0 && (
+              <p className="text-green-600 text-xs mt-1">{t('checkout.couponAppliedDiscount').replace('${amount}', `-$${couponDiscount.toFixed(2)}`)}</p>
+            )}
+          </div>
+
+          {/* Payment method */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('checkout.paymentMethod')}</h2>
             <div className="space-y-2">
