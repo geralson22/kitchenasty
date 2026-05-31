@@ -471,6 +471,7 @@ export async function getOrder(req: Request<{ id: string }>, res: Response): Pro
     include: {
       customer: { select: { id: true, name: true, email: true, phone: true } },
       location: { select: { id: true, name: true } },
+      address: true,
       items: {
         include: {
           menuItem: { select: { id: true, name: true, slug: true } },

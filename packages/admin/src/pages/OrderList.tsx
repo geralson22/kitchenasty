@@ -11,6 +11,8 @@ interface Order {
   createdAt: string;
   scheduledAt: string | null;
   customer: { id: string; name: string; email: string } | null;
+  guestName: string | null;
+  guestPhone: string | null;
   location: { id: string; name: string };
   _count: { items: number };
 }
@@ -143,7 +145,12 @@ export default function OrderList() {
                       )}
                     </td>
                     <td className="px-4 py-3">
-                      {order.customer ? order.customer.name : <span className="text-gray-400">Guest</span>}
+                      {order.customer ? order.customer.name : order.guestName ? (
+                        <div>
+                          <span>{order.guestName}</span>
+                          {order.guestPhone && <span className="block text-xs text-gray-400">{order.guestPhone}</span>}
+                        </div>
+                      ) : <span className="text-gray-400">Guest</span>}
                     </td>
                     <td className="px-4 py-3">
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${order.orderType === 'DELIVERY' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'
