@@ -264,10 +264,12 @@ export default function OrderDetailPage() {
               <span>${order.deliveryFee.toFixed(2)}</span>
             </div>
           )}
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', margin: '1px 0' }}>
-            <span>{t('tax')}</span>
-            <span>${order.tax.toFixed(2)}</span>
-          </div>
+          {order.tax > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', margin: '1px 0' }}>
+              <span>{t('tax')}</span>
+              <span>${order.tax.toFixed(2)}</span>
+            </div>
+          )}
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 'bold', margin: '2px 0', borderTop: '1px solid #000', paddingTop: '2px' }}>
             <span>{t('total')}</span>
             <span>${order.total.toFixed(2)}</span>
@@ -323,10 +325,12 @@ export default function OrderDetailPage() {
                 <span className="text-gray-600">Subtotal</span>
                 <span>${order.subtotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Tax</span>
-                <span>${order.tax.toFixed(2)}</span>
-              </div>
+              {order.tax > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Tax</span>
+                  <span>${order.tax.toFixed(2)}</span>
+                </div>
+              )}
               {order.deliveryFee > 0 && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Delivery Fee</span>

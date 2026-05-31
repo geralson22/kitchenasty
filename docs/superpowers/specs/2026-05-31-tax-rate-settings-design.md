@@ -70,9 +70,14 @@ In both the print invoice and web UI, conditionally render tax when `order.tax >
 
 Same conditional render for tax line when `order.tax > 0`.
 
-### 6. Mobile (`packages/mobile`) — DO NOT MODIFY
+### 6. Mobile App — EXPLICITLY OUT OF SCOPE
 
-Per project restrictions, the mobile package is managed separately and should not be touched.
+The mobile package (`packages/mobile`) is managed separately and **must not be modified**. The mobile app will continue using its hardcoded tax rate independently.
+
+## Important Notes
+
+- **DO NOT commit or stage any changes** — complete implementation but leave changes uncommitted
+- **DO NOT modify mobile app** — `packages/mobile` is out of scope
 
 ## Files Summary
 

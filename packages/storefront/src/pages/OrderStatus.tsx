@@ -209,10 +209,12 @@ export default function OrderStatus() {
             <span className="text-gray-600">{t('checkout.subtotal')}</span>
             <span>${order.subtotal.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">{t('checkout.tax')}</span>
-            <span>${order.tax.toFixed(2)}</span>
-          </div>
+          {order.tax > 0 && (
+            <div className="flex justify-between">
+              <span className="text-gray-600">{t('checkout.tax')}</span>
+              <span>${order.tax.toFixed(2)}</span>
+            </div>
+          )}
           {order.deliveryFee > 0 && (
             <div className="flex justify-between">
               <span className="text-gray-600">{t('checkout.deliveryFee')}</span>

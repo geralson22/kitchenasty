@@ -8,8 +8,6 @@ import { getWhatsAppUrl } from '../utils/whatsapp.js';
 type OrderType = 'delivery' | 'pickup';
 type PaymentMethod = 'CASH' | 'STRIPE' | 'PAYPAL' | 'TRANSFER';
 
-const TAX_RATE = 0.08;
-
 export default function Checkout() {
   const { t } = useTranslation();
   const { items, subtotal, clear } = useCart();
@@ -86,9 +84,16 @@ export default function Checkout() {
     }
   }
 
-  const tax = subtotal * TAX_RATE;
+  const [tax, setTax] = useState(0);
+  const [taxRate, setTaxRate] = useState(0);
+  const estimatedTax = subtotal * (taxRate / 100);
+  const displayTax = tax > 0 ? tax : estimatedTax;
+
+  useEffect(() => {
+    if (items.length === 0) setTax(0);
+  }, [items.length]);
   const currentDeliveryFee = orderType === 'delivery' && !couponFreeDelivery ? deliveryFee : 0;
-  const total = subtotal + tax + currentDeliveryFee - loyaltyDiscount - couponDiscount;
+  const total = subtotal + displayTax + currentDeliveryFee - loyaltyDiscount - couponDiscount;
 
   // Check busy mode + fetch delivery zones on mount
   useEffect(() => {
@@ -126,6 +131,18 @@ export default function Checkout() {
             cashEnabled: data.data.cashEnabled ?? true,
             transferEnabled: data.data.transferEnabled ?? true,
           });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  // Fetch tax rate from settings
+  useEffect(() => {
+    fetch('/api/settings/order')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.data?.taxRate) {
+          setTaxRate(data.data.taxRate);
         }
       })
       .catch(() => {});
@@ -231,6 +248,7 @@ export default function Checkout() {
       clear();
 
       const order = data.data;
+      if (order.tax) setTax(order.tax);
       const whatsappUrl = getWhatsAppUrl(order, orderType, t, window.location.origin);
       window.open(whatsappUrl, '_blank');
 
@@ -595,10 +613,12 @@ export default function Checkout() {
                 <span className="text-gray-600">{t('checkout.subtotal')}</span>
                 <span className="text-gray-900">${subtotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">{t('checkout.tax')}</span>
-                <span className="text-gray-900">${tax.toFixed(2)}</span>
-              </div>
+              {displayTax > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">{t('checkout.tax')}</span>
+                    <span>${displayTax.toFixed(2)}</span>
+                  </div>
+                )}
               {orderType === 'delivery' && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">{t('checkout.deliveryFee')}</span>
