@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ToastContainer, ToastItem, ToastAction } from '../components/Toast.js';
 
 export interface CartItemOption {
   optionId: string;
@@ -68,21 +69,6 @@ function clearCartStorage() {
   } catch {}
 }
 
-interface ToastAction {
-  labelKey: string;
-  onClick: () => void;
-}
-
-interface ToastItem {
-  id: string;
-  message: string;
-  type?: 'error' | 'info' | 'prompt';
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
-}
-
 interface ToastContextType {
   showToast: (message: string, options?: Record<string, string | number>, type?: 'error' | 'info' | 'prompt', action?: ToastAction, duration?: number) => void;
 }
@@ -101,37 +87,14 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     }, duration);
   }, [t]);
 
+  const dismissToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  }, []);
+
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <div className="fixed top-4 right-4 z-50 flex flex-col gap-2">
-        {toasts.map((toast) => (
-          <div
-            key={toast.id}
-            className={`${toast.type === 'info' ? 'bg-green-600' : toast.type === 'prompt' ? 'bg-blue-600' : 'bg-red-600'} text-white px-4 py-3 rounded-lg shadow-lg max-w-sm flex items-center gap-3`}
-          >
-            <span className="text-sm flex-1">{toast.message}</span>
-            {toast.action && (
-              <button
-                onClick={() => {
-                  toast.action!.onClick();
-                  setToasts((prev) => prev.filter((t) => t.id !== toast.id));
-                }}
-                className="bg-white text-blue-600 px-3 py-1 rounded font-medium text-sm hover:bg-gray-100"
-              >
-                {toast.action.label}
-              </button>
-            )}
-            <button
-              onClick={() => setToasts((prev) => prev.filter((t) => t.id !== toast.id))}
-              className={`${toast.type === 'info' ? 'text-green-200 hover:text-white' : toast.type === 'prompt' ? 'text-blue-200 hover:text-white' : 'text-red-200 hover:text-white'} text-lg leading-none`}
-              aria-label="Dismiss"
-            >
-              ×
-            </button>
-          </div>
-        ))}
-      </div>
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </ToastContext.Provider>
   );
 }
