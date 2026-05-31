@@ -1,8 +1,12 @@
 import { Router } from 'express';
 import { authenticate, optionalAuth, requireStaff, requireRole } from '../middleware/auth.js';
 import { createOrder, listOrders, listCustomerOrders, getOrder, updateOrderStatus } from '../controllers/order.controller.js';
+import { validateCart } from '../controllers/cart.controller.js';
 
 const router = Router();
+
+// Cart validation (no auth - guest cart)
+router.post('/validate', validateCart);
 
 // Customer creates order (optionalAuth - allows guest checkout)
 router.post('/', optionalAuth, createOrder);

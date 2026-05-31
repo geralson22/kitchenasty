@@ -110,7 +110,8 @@
     "subtotal": "Subtotal",
     "checkout": "Pagar",
     "remove": "Eliminar",
-    "close": "Cerrar carrito"
+    "close": "Cerrar carrito",
+    "invalidated": "Algunos productos fueron actualizados. Tu carrito ha sido eliminado."
   },
   "checkout": {
     "title": "Pagar",

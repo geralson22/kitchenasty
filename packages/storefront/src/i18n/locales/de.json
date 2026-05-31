@@ -110,7 +110,8 @@
     "subtotal": "Zwischensumme",
     "checkout": "Zur Kasse",
     "remove": "Entfernen",
-    "close": "Warenkorb schließen"
+    "close": "Warenkorb schließen",
+    "invalidated": "Einige Produkte wurden aktualisiert. Ihr Warenkorb wurde gelöscht."
   },
   "checkout": {
     "title": "Kasse",

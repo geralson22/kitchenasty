@@ -110,7 +110,8 @@
     "subtotal": "Sous-total",
     "checkout": "Commander",
     "remove": "Supprimer",
-    "close": "Fermer le panier"
+    "close": "Fermer le panier",
+    "invalidated": "Certains produits ont été mis à jour. Votre panier a été supprimé."
   },
   "checkout": {
     "title": "Paiement",

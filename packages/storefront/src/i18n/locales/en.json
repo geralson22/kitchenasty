@@ -110,7 +110,8 @@
     "subtotal": "Subtotal",
     "checkout": "Checkout",
     "remove": "Remove",
-    "close": "Close cart"
+    "close": "Close cart",
+    "invalidated": "Some products were updated. Your cart has been cleared."
   },
   "checkout": {
     "title": "Checkout",

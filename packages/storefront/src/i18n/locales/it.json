@@ -110,7 +110,8 @@
     "subtotal": "Subtotale",
     "checkout": "Vai alla Cassa",
     "remove": "Rimuovi",
-    "close": "Chiudi carrello"
+    "close": "Chiudi carrello",
+    "invalidated": "Alcuni prodotti sono stati aggiornati. Il tuo carrello è stato svuotato."
   },
   "checkout": {
     "title": "Cassa",
