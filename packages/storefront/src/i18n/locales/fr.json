@@ -221,6 +221,7 @@
     "errorLoading": "Impossible de charger les détails de la commande."
   },
   "orderStatus": {
+    "statusUpdated": "Statut de la commande mis à jour vers {{status}}",
     "placed": "Passée",
     "confirmed": "Confirmée",
     "preparing": "En Préparation",

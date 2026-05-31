@@ -221,6 +221,7 @@
     "errorLoading": "Failed to load order details."
   },
   "orderStatus": {
+    "statusUpdated": "Order status updated to {{status}}",
     "placed": "Placed",
     "confirmed": "Confirmed",
     "preparing": "Preparing",

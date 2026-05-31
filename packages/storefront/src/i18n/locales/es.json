@@ -221,6 +221,7 @@
     "errorLoading": "Error al cargar los detalles del pedido."
   },
   "orderStatus": {
+    "statusUpdated": "Estado del pedido actualizado a {{status}}",
     "placed": "Realizado",
     "confirmed": "Confirmado",
     "preparing": "Preparando",

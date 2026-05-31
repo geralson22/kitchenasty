@@ -221,6 +221,7 @@
     "errorLoading": "Bestelldetails konnten nicht geladen werden."
   },
   "orderStatus": {
+    "statusUpdated": "Bestellstatus aktualisiert auf {{status}}",
     "placed": "Aufgegeben",
     "confirmed": "Bestätigt",
     "preparing": "In Zubereitung",

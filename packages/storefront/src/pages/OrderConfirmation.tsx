@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { io } from 'socket.io-client';
 import { getWhatsAppUrl } from '../utils/whatsapp.js';
 import { useAuth } from '../context/AuthContext.js';
+import { useToast } from '../context/CartContext.js';
 
 interface OrderData {
   id: string;
@@ -22,6 +23,7 @@ export default function OrderConfirmation() {
   const { id } = useParams();
   const location = useLocation();
   const { token } = useAuth();
+  const { showToast } = useToast();
   const [order, setOrder] = useState<OrderData | null>(location.state?.order);
   const [loading, setLoading] = useState(!location.state?.order);
   const [error, setError] = useState('');
@@ -58,6 +60,7 @@ export default function OrderConfirmation() {
     socket.on('order:statusUpdate', (data: { id: string; status: string }) => {
       if (data.id === id) {
         setOrder((prev) => prev ? { ...prev, status: data.status } : prev);
+        showToast('orderStatus.statusUpdated', { status: data.status.replace(/_/g, ' ') }, 'info');
       }
     });
 

@@ -71,10 +71,11 @@ function clearCartStorage() {
 interface ToastItem {
   id: string;
   message: string;
+  type?: 'error' | 'info';
 }
 
 interface ToastContextType {
-  showToast: (message: string, duration?: number) => void;
+  showToast: (message: string, options?: Record<string, string | number>, type?: 'error' | 'info', duration?: number) => void;
 }
 
 const ToastContext = createContext<ToastContextType | null>(null);
@@ -83,9 +84,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   const { t } = useTranslation();
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
-  const showToast = useCallback((messageKey: string, duration: number = 10000) => {
+  const showToast = useCallback((messageKey: string, options?: Record<string, string | number>, type: 'error' | 'info' = 'error', duration: number = 10000) => {
     const id = generateId();
-    setToasts((prev) => [...prev, { id, message: t(messageKey) }]);
+    setToasts((prev) => [...prev, { id, message: t(messageKey, options), type }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((toast) => toast.id !== id));
     }, duration);
@@ -98,12 +99,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className="bg-red-600 text-white px-4 py-3 rounded-lg shadow-lg max-w-sm flex items-center gap-3"
+            className={`${toast.type === 'info' ? 'bg-green-600' : 'bg-red-600'} text-white px-4 py-3 rounded-lg shadow-lg max-w-sm flex items-center gap-3`}
           >
             <span className="text-sm">{toast.message}</span>
             <button
               onClick={() => setToasts((prev) => prev.filter((t) => t.id !== toast.id))}
-              className="text-red-200 hover:text-white text-lg leading-none"
+              className={`${toast.type === 'info' ? 'text-green-200 hover:text-white' : 'text-red-200 hover:text-white'} text-lg leading-none`}
               aria-label="Dismiss"
             >
               ×
