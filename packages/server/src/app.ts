@@ -74,8 +74,8 @@ export function createApp() {
 
   // Stripe webhook needs raw body — register before JSON parser
   app.use('/api/payments/webhook', express.raw({ type: 'application/json' }));
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json({ limit: '10mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
   // Initialize passport for social login
   initPassport();

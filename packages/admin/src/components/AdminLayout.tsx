@@ -98,7 +98,7 @@ export default function AdminLayout({ children, onLogout }: { children: React.Re
 
     async function fetchPending() {
       try {
-        const res = await fetch('/api/dashboard', {
+        const res = await fetch('/api/dashboard/stats', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
