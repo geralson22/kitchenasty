@@ -51,16 +51,16 @@ export default function ElegantFooter() {
 
           {/* Legal */}
           <div>
-            <h3 className="text-gray-800 font-serif text-base mb-4 tracking-wide">Legal</h3>
+            <h3 className="text-gray-800 font-serif text-base mb-4 tracking-wide">{t('footer.legal')}</h3>
             <ul className="space-y-2">
-              <li><Link to="/privacy-policy" className="hover:text-gray-900 transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/impressum" className="hover:text-gray-900 transition-colors">Impressum</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-gray-900 transition-colors">{t('footer.privacyPolicy')}</Link></li>
+              <li><Link to="/impressum" className="hover:text-gray-900 transition-colors">{t('footer.impressum')}</Link></li>
               <li>
                 <button
                   onClick={() => window.dispatchEvent(new Event('open-cookie-settings'))}
                   className="hover:text-gray-900 transition-colors"
                 >
-                  Cookie Settings
+                  {t('footer.cookieSettings')}
                 </button>
               </li>
             </ul>

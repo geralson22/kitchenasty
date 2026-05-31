@@ -32,13 +32,13 @@ export default function MinimalFooter() {
             <Link to="/register" className="hover:text-gray-900 transition-colors">{t('footer.createAccount')}</Link>
             <Link to="/account" className="hover:text-gray-900 transition-colors">{t('nav.myAccount')}</Link>
             <span className="text-gray-300">|</span>
-            <Link to="/privacy-policy" className="hover:text-gray-900 transition-colors">Privacy Policy</Link>
-            <Link to="/impressum" className="hover:text-gray-900 transition-colors">Impressum</Link>
+            <Link to="/privacy-policy" className="hover:text-gray-900 transition-colors">{t('footer.privacyPolicy')}</Link>
+            <Link to="/impressum" className="hover:text-gray-900 transition-colors">{t('footer.impressum')}</Link>
             <button
               onClick={() => window.dispatchEvent(new Event('open-cookie-settings'))}
               className="hover:text-gray-900 transition-colors"
             >
-              Cookie Settings
+              {t('footer.cookieSettings')}
             </button>
           </nav>
         </div>

@@ -47,7 +47,11 @@
     "quickLinks": "Liens Rapides",
     "account": "Compte",
     "createAccount": "Créer un Compte",
-    "allRightsReserved": "Tous droits réservés."
+    "allRightsReserved": "Tous droits réservés.",
+    "legal": "Mentions légales",
+    "privacyPolicy": "Politique de Confidentialité",
+    "impressum": "Impressum",
+    "cookieSettings": "Paramètres des Cookies"
   },
   "auth": {
     "loginTitle": "Connexion",
@@ -65,7 +69,9 @@
     "createAccount": "Créer un Compte",
     "creating": "Création du compte...",
     "hasAccount": "Vous avez déjà un compte ?",
-    "loginLink": "Se connecter"
+    "loginLink": "Se connecter",
+    "orContinueWith": "Ou continuer avec",
+    "loginFailed": "Échec de la connexion"
   },
   "account": {
     "title": "Mon Compte",
@@ -79,7 +85,10 @@
     "viewOrders": "Voir les Commandes",
     "pleaseLogin": "Veuillez",
     "loginToView": "vous connecter",
-    "toViewAccount": "pour accéder à votre compte."
+    "toViewAccount": "pour accéder à votre compte.",
+    "loyaltyPoints": "Points de Fidélité",
+    "pointsValue": "points (${value} valeur)",
+    "pointsExplanation": "Gagnez 1 point par $1 dépensé. 100 points = $1 de réduction sur votre commande."
   },
   "locations": {
     "title": "Nos Restaurants",
@@ -134,9 +143,11 @@
     "couponCode": "Code Promo",
     "apply": "Appliquer",
     "couponApplied": "Code promo appliqué !",
+    "couponAppliedDiscount": "Code promo appliqué ! -${amount}",
     "paymentMethod": "Mode de Paiement",
     "creditCard": "Carte Bancaire (Stripe)",
     "cashOnDelivery": "Paiement à la livraison",
+    "paypal": "PayPal",
     "orderSummary": "Récapitulatif",
     "subtotal": "Sous-total",
     "tax": "TVA",
@@ -146,7 +157,17 @@
     "placeOrder": "Passer la Commande",
     "processing": "Traitement en cours...",
     "guestCheckout": "Commander en tant qu'Invité",
-    "guestEmail": "E-mail pour le suivi de commande"
+    "guestEmail": "E-mail pour le suivi de commande",
+    "currentlyUnavailable": "Actuellement Indisponible",
+    "loyaltyPoints": "Points de Fidélité",
+    "pointsAvailable": "Vous avez {points} points disponibles ({value})",
+    "pointsToRedeem": "points à échanger",
+    "loyaltyDiscount": "Réduction Fidélité",
+    "contactInformation": "Informations de Contact",
+    "loginForFasterCheckout": "pour un paiement plus rapide, ou continuez en tant qu'invité :",
+    "fullName": "Nom complet *",
+    "phoneNumber": "Numéro de téléphone *",
+    "emailAddress": "Adresse e-mail (optionnel)"
   },
 "orderConfirmation": {
     "title": "Commande passée !",
@@ -248,5 +269,13 @@
     "title": "Page Introuvable",
     "message": "Désolé, nous n'avons pas trouvé la page que vous cherchez.",
     "backHome": "Retour à l'Accueil"
+  },
+  "cookies": {
+    "preferences": "Préférences de Cookies",
+    "description": "Nous utilisons des cookies pour améliorer votre expérience. Vous pouvez personnaliser vos préférences ci-dessous.",
+    "showDetails": "Afficher les détails",
+    "hideDetails": "Masquer les détails",
+    "savePreferences": "Enregistrer les Préférences",
+    "acceptAll": "Tout Accepter"
   }
 }

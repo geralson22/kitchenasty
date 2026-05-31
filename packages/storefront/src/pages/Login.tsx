@@ -20,7 +20,7 @@ export default function Login() {
       await login(email, password);
       navigate('/');
     } catch (err: any) {
-      setError(err.message || 'Login failed');
+      setError(err.message || t('auth.loginFailed'));
     } finally {
       setLoading(false);
     }
@@ -81,7 +81,7 @@ export default function Login() {
               <div className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-2 text-gray-500">Or continue with</span>
+              <span className="bg-white px-2 text-gray-500">{t('auth.orContinueWith')}</span>
             </div>
           </div>
 

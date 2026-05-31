@@ -61,12 +61,12 @@ export default function Account() {
         {/* Loyalty Points */}
         {loyaltyPoints !== null && (
           <div className="p-6 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">Loyalty Points</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">{t('account.loyaltyPoints')}</h2>
             <div className="flex items-baseline gap-3">
               <span className="text-3xl font-bold text-primary-600">{loyaltyPoints}</span>
-              <span className="text-sm text-gray-500">points (${(loyaltyPoints / 100).toFixed(2)} value)</span>
+              <span className="text-sm text-gray-500">{t('account.pointsValue').replace('${value}', `$${(loyaltyPoints / 100).toFixed(2)}`)}</span>
             </div>
-            <p className="text-xs text-gray-400 mt-1">Earn 1 point per $1 spent. 100 points = $1 off your order.</p>
+            <p className="text-xs text-gray-400 mt-1">{t('account.pointsExplanation')}</p>
           </div>
         )}
 

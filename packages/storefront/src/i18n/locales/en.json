@@ -47,7 +47,11 @@
     "quickLinks": "Quick Links",
     "account": "Account",
     "createAccount": "Create Account",
-    "allRightsReserved": "All rights reserved."
+    "allRightsReserved": "All rights reserved.",
+    "legal": "Legal",
+    "privacyPolicy": "Privacy Policy",
+    "impressum": "Impressum",
+    "cookieSettings": "Cookie Settings"
   },
   "auth": {
     "loginTitle": "Sign In",
@@ -65,7 +69,9 @@
     "createAccount": "Create Account",
     "creating": "Creating account...",
     "hasAccount": "Already have an account?",
-    "loginLink": "Sign in"
+    "loginLink": "Sign in",
+    "orContinueWith": "Or continue with",
+    "loginFailed": "Login failed"
   },
   "account": {
     "title": "My Account",
@@ -79,7 +85,10 @@
     "viewOrders": "View Orders",
     "pleaseLogin": "Please",
     "loginToView": "log in",
-    "toViewAccount": "to view your account."
+    "toViewAccount": "to view your account.",
+    "loyaltyPoints": "Loyalty Points",
+    "pointsValue": "points (${value} value)",
+    "pointsExplanation": "Earn 1 point per $1 spent. 100 points = $1 off your order."
   },
   "locations": {
     "title": "Our Locations",
@@ -134,9 +143,11 @@
     "couponCode": "Coupon Code",
     "apply": "Apply",
     "couponApplied": "Coupon applied!",
+    "couponAppliedDiscount": "Coupon applied! -${amount}",
     "paymentMethod": "Payment Method",
     "creditCard": "Credit Card (Stripe)",
     "cashOnDelivery": "Cash on Delivery",
+    "paypal": "PayPal",
     "orderSummary": "Order Summary",
     "subtotal": "Subtotal",
     "tax": "Tax",
@@ -146,7 +157,17 @@
     "placeOrder": "Place Order",
     "processing": "Processing...",
     "guestCheckout": "Guest Checkout",
-    "guestEmail": "Email for order updates"
+    "guestEmail": "Email for order updates",
+    "currentlyUnavailable": "Currently Unavailable",
+    "loyaltyPoints": "Loyalty Points",
+    "pointsAvailable": "You have {points} points available ({value})",
+    "pointsToRedeem": "points to redeem",
+    "loyaltyDiscount": "Loyalty Discount",
+    "contactInformation": "Contact Information",
+    "loginForFasterCheckout": "for faster checkout, or continue as guest:",
+    "fullName": "Full name *",
+    "phoneNumber": "Phone number *",
+    "emailAddress": "Email address (optional)"
   },
   "orderConfirmation": {
     "title": "Order Placed!",
@@ -248,5 +269,13 @@
     "title": "Page Not Found",
     "message": "Sorry, we couldn't find the page you're looking for.",
     "backHome": "Back to Home"
+  },
+  "cookies": {
+    "preferences": "Cookie Preferences",
+    "description": "We use cookies to enhance your experience. You can customize your preferences below.",
+    "showDetails": "Show details",
+    "hideDetails": "Hide details",
+    "savePreferences": "Save Preferences",
+    "acceptAll": "Accept All"
   }
 }

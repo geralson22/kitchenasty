@@ -47,7 +47,11 @@
     "quickLinks": "Link Rapidi",
     "account": "Account",
     "createAccount": "Crea un Account",
-    "allRightsReserved": "Tutti i diritti riservati."
+    "allRightsReserved": "Tutti i diritti riservati.",
+    "legal": "Legale",
+    "privacyPolicy": "Privacy Policy",
+    "impressum": "Impressum",
+    "cookieSettings": "Impostazioni Cookie"
   },
   "auth": {
     "loginTitle": "Accedi",
@@ -65,7 +69,9 @@
     "createAccount": "Crea un Account",
     "creating": "Creazione account...",
     "hasAccount": "Hai già un account?",
-    "loginLink": "Accedi"
+    "loginLink": "Accedi",
+    "orContinueWith": "O continuare con",
+    "loginFailed": "Accesso fallito"
   },
   "account": {
     "title": "Il Mio Account",
@@ -79,7 +85,10 @@
     "viewOrders": "Vedi Ordini",
     "pleaseLogin": "Per favore",
     "loginToView": "accedi",
-    "toViewAccount": "per visualizzare il tuo account."
+    "toViewAccount": "per visualizzare il tuo account.",
+    "loyaltyPoints": "Punti Fedeltà",
+    "pointsValue": "punti (valore ${value})",
+    "pointsExplanation": "Guadagna 1 punto per $1 speso. 100 punti = $1 di sconto sul tuo ordine."
   },
   "locations": {
     "title": "Le Nostre Sedi",
@@ -134,9 +143,11 @@
     "couponCode": "Codice Sconto",
     "apply": "Applica",
     "couponApplied": "Codice sconto applicato!",
+    "couponAppliedDiscount": "Codice sconto applicato! -${amount}",
     "paymentMethod": "Metodo di Pagamento",
     "creditCard": "Carta di Credito (Stripe)",
     "cashOnDelivery": "Pagamento alla consegna",
+    "paypal": "PayPal",
     "orderSummary": "Riepilogo Ordine",
     "subtotal": "Subtotale",
     "tax": "IVA",
@@ -146,7 +157,17 @@
     "placeOrder": "Effettua Ordine",
     "processing": "Elaborazione in corso...",
     "guestCheckout": "Ordina come Ospite",
-    "guestEmail": "E-mail per aggiornamenti sull'ordine"
+    "guestEmail": "E-mail per aggiornamenti sull'ordine",
+    "currentlyUnavailable": "Attualmente Non Disponibile",
+    "loyaltyPoints": "Punti Fedeltà",
+    "pointsAvailable": "Hai {points} punti disponibili ({value})",
+    "pointsToRedeem": "punti da utilizzare",
+    "loyaltyDiscount": "Sconto Fedeltà",
+    "contactInformation": "Informazioni di Contatto",
+    "loginForFasterCheckout": "per un pagamento più veloce, o continua come ospite:",
+    "fullName": "Nome completo *",
+    "phoneNumber": "Numero di telefono *",
+    "emailAddress": "Indirizzo e-mail (opzionale)"
   },
 "orderConfirmation": {
     "title": "Ordine effettuato!",
@@ -248,5 +269,13 @@
     "title": "Pagina Non Trovata",
     "message": "Ci dispiace, non abbiamo trovato la pagina che stai cercando.",
     "backHome": "Torna alla Home"
+  },
+  "cookies": {
+    "preferences": "Preferenze Cookie",
+    "description": "Utilizziamo i cookie per migliorare la tua esperienza. Puoi personalizzare le tue preferenze qui sotto.",
+    "showDetails": "Mostra dettagli",
+    "hideDetails": "Nascondi dettagli",
+    "savePreferences": "Salva Preferenze",
+    "acceptAll": "Accetta Tutto"
   }
 }

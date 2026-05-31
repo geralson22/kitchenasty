@@ -42,7 +42,7 @@ export function buildWhatsAppMessage(
   const paymentLabel = order.paymentMethod === 'STRIPE' ? t('whatsapp.stripe') :
     order.paymentMethod === 'PAYPAL' ? t('whatsapp.paypal') : t('whatsapp.cash');
 
-  const orderUrl = `${baseUrl}/orders/${order.id}`;
+  const orderUrl = `${baseUrl}/orders/${order.orderNumber}`;
 
   const message =
     `🛒 *${t('whatsapp.title')}*\n\n` +

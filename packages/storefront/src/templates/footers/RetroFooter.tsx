@@ -60,17 +60,17 @@ export default function RetroFooter() {
           {/* Legal */}
           <div>
             <h3 className="text-amber-200 font-bold uppercase tracking-widest text-xs mb-5 border-b border-amber-800 pb-2">
-              Legal
+              {t('footer.legal')}
             </h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/privacy-policy" className="hover:text-amber-100 transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/impressum" className="hover:text-amber-100 transition-colors">Impressum</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-amber-100 transition-colors">{t('footer.privacyPolicy')}</Link></li>
+              <li><Link to="/impressum" className="hover:text-amber-100 transition-colors">{t('footer.impressum')}</Link></li>
               <li>
                 <button
                   onClick={() => window.dispatchEvent(new Event('open-cookie-settings'))}
                   className="hover:text-amber-100 transition-colors"
                 >
-                  Cookie Settings
+                  {t('footer.cookieSettings')}
                 </button>
               </li>
             </ul>

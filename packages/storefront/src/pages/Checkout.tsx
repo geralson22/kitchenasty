@@ -199,7 +199,7 @@ export default function Checkout() {
 
       {isBusy && (
         <div className="bg-amber-50 border border-amber-300 text-amber-800 p-4 rounded-lg mb-6">
-          <p className="font-semibold">Currently Unavailable</p>
+          <p className="font-semibold">{t('checkout.currentlyUnavailable')}</p>
           <p className="text-sm mt-1">{busyMessage}</p>
         </div>
       )}
@@ -353,17 +353,16 @@ export default function Checkout() {
             </div>
             {couponError && <p className="text-red-500 text-xs mt-1">{couponError}</p>}
             {!couponError && couponDiscount > 0 && (
-              <p className="text-green-600 text-xs mt-1">Coupon applied! -${couponDiscount.toFixed(2)}</p>
+              <p className="text-green-600 text-xs mt-1">{t('checkout.couponAppliedDiscount').replace('${amount}', `-$${couponDiscount.toFixed(2)}`)}</p>
             )}
           </div>
 
           {/* Loyalty Points Redemption */}
           {user && loyaltyBalance > 0 && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Loyalty Points</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('checkout.loyaltyPoints')}</h2>
               <p className="text-sm text-gray-600 mb-3">
-                You have <span className="font-bold text-primary-600">{loyaltyBalance}</span> points available
-                (100 points = $1.00)
+                {t('checkout.pointsAvailable').replace('{points}', String(loyaltyBalance)).replace('{value}', `100 points = $1.00`)}
               </p>
               <div className="flex items-center gap-3">
                 <input
@@ -376,7 +375,7 @@ export default function Checkout() {
                   className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
                   placeholder="0"
                 />
-                <span className="text-sm text-gray-600">points to redeem</span>
+                <span className="text-sm text-gray-600">{t('checkout.pointsToRedeem')}</span>
                 {loyaltyRedeem > 0 && (
                   <span className="text-sm font-medium text-green-600">
                     -${loyaltyDiscount.toFixed(2)}
@@ -389,18 +388,18 @@ export default function Checkout() {
           {/* Guest info or login prompt */}
           {!user && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('checkout.contactInformation')}</h2>
               <p className="text-sm text-gray-600 mb-3">
                 <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium underline">
                   {t('nav.login')}
                 </Link>{' '}
-                for faster checkout, or continue as guest:
+                {t('checkout.loginForFasterCheckout')}
               </p>
               <div className="space-y-3">
                 <input
                   type="text"
                   required
-                  placeholder="Full name *"
+                  placeholder={t('checkout.fullName')}
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
@@ -408,14 +407,14 @@ export default function Checkout() {
                 <input
                   type="tel"
                   required
-                  placeholder="Phone number *"
+                  placeholder={t('checkout.phoneNumber')}
                   value={guestPhone}
                   onChange={(e) => setGuestPhone(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
                 />
                 <input
                   type="email"
-                  placeholder="Email address (optional)"
+                  placeholder={t('checkout.emailAddress')}
                   value={guestEmail}
                   onChange={(e) => setGuestEmail(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
@@ -468,7 +467,7 @@ paymentMethod === 'PAYPAL'
                   onChange={() => setPaymentMethod('PAYPAL')}
                   className="accent-primary-600"
                 />
-                <span className="text-sm font-medium text-gray-900">PayPal</span>
+                <span className="text-sm font-medium text-gray-900">{t('checkout.paypal')}</span>
               </label>
             </div>
           </div>
@@ -518,7 +517,7 @@ paymentMethod === 'PAYPAL'
               )}
               {loyaltyDiscount > 0 && (
                 <div className="flex justify-between text-green-600">
-                  <span>Loyalty Discount</span>
+                  <span>{t('checkout.loyaltyDiscount')}</span>
                   <span>-${loyaltyDiscount.toFixed(2)}</span>
                 </div>
               )}
@@ -534,7 +533,7 @@ paymentMethod === 'PAYPAL'
               className="w-full mt-4 bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors disabled:opacity-50"
             >
               {isBusy
-                ? 'Currently Unavailable'
+                ? t('checkout.currentlyUnavailable')
                 : loading
                   ? t('checkout.processing')
                   : `${t('checkout.placeOrder')} — $${total.toFixed(2)}`}

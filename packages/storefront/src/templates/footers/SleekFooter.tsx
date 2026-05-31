@@ -53,16 +53,16 @@ export default function SleekFooter() {
 
           {/* Legal */}
           <div>
-            <h3 className="text-gray-300 font-medium mb-4 text-sm">Legal</h3>
+            <h3 className="text-gray-300 font-medium mb-4 text-sm">{t('footer.legal')}</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/privacy-policy" className="hover:text-cyan-400 transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/impressum" className="hover:text-cyan-400 transition-colors">Impressum</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-cyan-400 transition-colors">{t('footer.privacyPolicy')}</Link></li>
+              <li><Link to="/impressum" className="hover:text-cyan-400 transition-colors">{t('footer.impressum')}</Link></li>
               <li>
                 <button
                   onClick={() => window.dispatchEvent(new Event('open-cookie-settings'))}
                   className="hover:text-cyan-400 transition-colors"
                 >
-                  Cookie Settings
+                  {t('footer.cookieSettings')}
                 </button>
               </li>
             </ul>
