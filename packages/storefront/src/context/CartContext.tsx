@@ -68,14 +68,23 @@ function clearCartStorage() {
   } catch {}
 }
 
+interface ToastAction {
+  labelKey: string;
+  onClick: () => void;
+}
+
 interface ToastItem {
   id: string;
   message: string;
-  type?: 'error' | 'info';
+  type?: 'error' | 'info' | 'prompt';
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
 }
 
 interface ToastContextType {
-  showToast: (message: string, options?: Record<string, string | number>, type?: 'error' | 'info', duration?: number) => void;
+  showToast: (message: string, options?: Record<string, string | number>, type?: 'error' | 'info' | 'prompt', action?: ToastAction, duration?: number) => void;
 }
 
 const ToastContext = createContext<ToastContextType | null>(null);
@@ -84,9 +93,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   const { t } = useTranslation();
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
-  const showToast = useCallback((messageKey: string, options?: Record<string, string | number>, type: 'error' | 'info' = 'error', duration: number = 10000) => {
+  const showToast = useCallback((messageKey: string, options?: Record<string, string | number>, type: 'error' | 'info' | 'prompt' = 'error', action?: ToastAction, duration: number = 10000) => {
     const id = generateId();
-    setToasts((prev) => [...prev, { id, message: t(messageKey, options), type }]);
+    setToasts((prev) => [...prev, { id, message: t(messageKey, options), type, action: action ? { ...action, label: t(action.labelKey) } : undefined }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((toast) => toast.id !== id));
     }, duration);
@@ -99,12 +108,23 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`${toast.type === 'info' ? 'bg-green-600' : 'bg-red-600'} text-white px-4 py-3 rounded-lg shadow-lg max-w-sm flex items-center gap-3`}
+            className={`${toast.type === 'info' ? 'bg-green-600' : toast.type === 'prompt' ? 'bg-blue-600' : 'bg-red-600'} text-white px-4 py-3 rounded-lg shadow-lg max-w-sm flex items-center gap-3`}
           >
-            <span className="text-sm">{toast.message}</span>
+            <span className="text-sm flex-1">{toast.message}</span>
+            {toast.action && (
+              <button
+                onClick={() => {
+                  toast.action!.onClick();
+                  setToasts((prev) => prev.filter((t) => t.id !== toast.id));
+                }}
+                className="bg-white text-blue-600 px-3 py-1 rounded font-medium text-sm hover:bg-gray-100"
+              >
+                {toast.action.label}
+              </button>
+            )}
             <button
               onClick={() => setToasts((prev) => prev.filter((t) => t.id !== toast.id))}
-              className={`${toast.type === 'info' ? 'text-green-200 hover:text-white' : 'text-red-200 hover:text-white'} text-lg leading-none`}
+              className={`${toast.type === 'info' ? 'text-green-200 hover:text-white' : toast.type === 'prompt' ? 'text-blue-200 hover:text-white' : 'text-red-200 hover:text-white'} text-lg leading-none`}
               aria-label="Dismiss"
             >
               ×

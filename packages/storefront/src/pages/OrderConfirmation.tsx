@@ -5,6 +5,25 @@ import { io } from 'socket.io-client';
 import { getWhatsAppUrl } from '../utils/whatsapp.js';
 import { useAuth } from '../context/AuthContext.js';
 import { useToast } from '../context/CartContext.js';
+import { useBrowserNotifications } from '../hooks/useBrowserNotifications.js';
+
+const STATUS_TRANSLATION_KEYS: Record<string, string> = {
+  PENDING: 'placed',
+  CONFIRMED: 'confirmed',
+  PREPARING: 'preparing',
+  READY: 'ready',
+  OUT_FOR_DELIVERY: 'outForDelivery',
+  DELIVERED: 'delivered',
+  READY_FOR_PICKUP: 'readyForPickup',
+  PICKED_UP: 'pickedUp',
+  CANCELLED: 'cancelled',
+};
+
+function translateStatus(t: (key: string) => string, status: string | undefined): string {
+  if (!status) return '';
+  const translationKey = STATUS_TRANSLATION_KEYS[status];
+  return translationKey ? t(`orderStatus.${translationKey}`) : status.replace(/_/g, ' ');
+}
 
 interface OrderData {
   id: string;
@@ -24,6 +43,7 @@ export default function OrderConfirmation() {
   const location = useLocation();
   const { token } = useAuth();
   const { showToast } = useToast();
+  const { requestPermission, showNotification } = useBrowserNotifications();
   const [order, setOrder] = useState<OrderData | null>(location.state?.order);
   const [loading, setLoading] = useState(!location.state?.order);
   const [error, setError] = useState('');
@@ -38,12 +58,15 @@ export default function OrderConfirmation() {
       const data = await res.json();
       setOrder(data.data);
       setError('');
+      if (data.data?.orderNumber) {
+        requestPermission(data.data.orderNumber);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load order');
     } finally {
       setLoading(false);
     }
-  }, [id, token]);
+  }, [id, token, requestPermission]);
 
   useEffect(() => {
     fetchOrder();
@@ -59,8 +82,12 @@ export default function OrderConfirmation() {
 
     socket.on('order:statusUpdate', (data: { id: string; status: string }) => {
       if (data.id === id) {
+        const translatedStatus = translateStatus(t, data.status);
         setOrder((prev) => prev ? { ...prev, status: data.status } : prev);
-        showToast('orderStatus.statusUpdated', { status: data.status.replace(/_/g, ' ') }, 'info');
+        showToast('orderStatus.statusUpdated', { status: translatedStatus }, 'info');
+        showNotification(`Order #${order?.orderNumber}`, {
+          body: `${t('orderStatus.statusUpdated', { status: translatedStatus })}`,
+        });
       }
     });
 
@@ -123,7 +150,7 @@ export default function OrderConfirmation() {
             </div>
             <div>
               <span className="text-gray-500">{t('orders.status')}</span>
-              <p className="font-medium text-gray-900">{order.status}</p>
+              <p className="font-medium text-gray-900">{translateStatus(t, order.status)}</p>
             </div>
             <div>
               <span className="text-gray-500">{t('checkout.subtotal')}</span>

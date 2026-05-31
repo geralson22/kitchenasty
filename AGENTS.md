@@ -112,6 +112,27 @@ Plus: `audit` (npm audit) and `build` (needs lint + unit + integration to pass f
 - Relative imports within a package; `@kitchenasty/shared` for cross-package
 - Branch naming: `feature/`, `fix/`, `docs/`, `refactor/`
 
+## Toast & Notification System
+
+### ToastProvider (`storefront/src/context/CartContext.tsx`)
+Provides in-app toast notifications with 3 types:
+- `'error'` — red background
+- `'info'` — green background  
+- `'prompt'` — blue background (for asking user actions)
+
+```typescript
+showToast(messageKey, options?, type?, action?, duration?)
+// action: { labelKey: string, onClick: () => void }
+// labelKey is automatically translated
+```
+
+### Browser Notifications (`storefront/src/hooks/useBrowserNotifications.ts`)
+- Uses native `Notification` API
+- Hook: `useBrowserNotifications()` returns `{ isSupported, permission, notificationsEnabled, requestPermission, showNotification }`
+- Permission stored in `localStorage` key `notifications_enabled`
+- Only prompts on `OrderConfirmation` page (not globally)
+- Browser support: Desktop Chrome/Firefox ✅, Android Chrome ⚠️, iOS Safari ❌
+
 ## Restrictions
 
 - **Do not update or modify the `packages/mobile` project.** The mobile app is managed separately and should not be touched.

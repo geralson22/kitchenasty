@@ -278,5 +278,10 @@
     "hideDetails": "Ocultar detalles",
     "savePreferences": "Guardar Preferencias",
     "acceptAll": "Aceptar Todo"
+  },
+  "notifications": {
+    "enablePrompt": "¿Activar notificaciones para recibir actualizaciones en tiempo real de tu pedido #{{orderNumber}}?",
+    "enable": "Activar",
+    "notNow": "Ahora no"
   }
 }

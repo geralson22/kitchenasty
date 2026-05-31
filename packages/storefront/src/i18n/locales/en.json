@@ -278,5 +278,10 @@
     "hideDetails": "Hide details",
     "savePreferences": "Save Preferences",
     "acceptAll": "Accept All"
+  },
+  "notifications": {
+    "enablePrompt": "Enable notifications to get real-time updates on your order #{{orderNumber}}?",
+    "enable": "Enable",
+    "notNow": "Not now"
   }
 }
