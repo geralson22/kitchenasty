@@ -485,7 +485,16 @@ export async function getOrder(req: Request<{ id: string }>, res: Response): Pro
     return;
   }
 
-  const user = req.user!;
+  const user = req.user;
+  if (!user) {
+    if (!order.customerId && (order.guestEmail || order.guestPhone)) {
+      res.json({ success: true, data: order });
+      return;
+    }
+    res.status(401).json({ success: false, error: 'Authentication required' });
+    return;
+  }
+
   if (user.type !== 'staff' && order.customerId !== user.id) {
     res.status(403).json({ success: false, error: 'Access denied' });
     return;

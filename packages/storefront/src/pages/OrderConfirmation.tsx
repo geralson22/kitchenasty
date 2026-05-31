@@ -1,12 +1,71 @@
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { io } from 'socket.io-client';
 import { getWhatsAppUrl } from '../utils/whatsapp.js';
+import { useAuth } from '../context/AuthContext.js';
+
+interface OrderData {
+  id: string;
+  orderNumber: string;
+  orderType: string;
+  status?: string;
+  subtotal?: number;
+  total: number;
+  items: Array<{ quantity: number; name: string; options?: Array<{ name: string; value: string }> }>;
+  comment?: string;
+  [key: string]: unknown;
+}
 
 export default function OrderConfirmation() {
   const { t } = useTranslation();
   const { id } = useParams();
   const location = useLocation();
-  const order = location.state?.order;
+  const { token } = useAuth();
+  const [order, setOrder] = useState<OrderData | null>(location.state?.order);
+  const [loading, setLoading] = useState(!location.state?.order);
+  const [error, setError] = useState('');
+
+  const fetchOrder = useCallback(async () => {
+    if (!id) return;
+    try {
+      const headers: Record<string, string> = {};
+      if (token) headers.Authorization = `Bearer ${token}`;
+      const res = await fetch(`/api/orders/${id}`, { headers });
+      if (!res.ok) throw new Error('Failed to load order');
+      const data = await res.json();
+      setOrder(data.data);
+      setError('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load order');
+    } finally {
+      setLoading(false);
+    }
+  }, [id, token]);
+
+  useEffect(() => {
+    fetchOrder();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const socket = io({ path: '/socket.io', transports: ['websocket', 'polling'] });
+
+    socket.emit('join:order', id);
+
+    socket.on('order:statusUpdate', (data: { id: string; status: string }) => {
+      if (data.id === id) {
+        setOrder((prev) => prev ? { ...prev, status: data.status } : prev);
+      }
+    });
+
+    return () => {
+      socket.emit('leave:order', id);
+      socket.disconnect();
+    };
+  }, [id]);
 
   const handleWhatsApp = () => {
     if (order) {
@@ -15,6 +74,25 @@ export default function OrderConfirmation() {
       window.open(url, '_blank');
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-20">
+        <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (error && !order) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+        <div className="bg-red-50 text-red-700 p-4 rounded-lg mb-4">{error}</div>
+        <button onClick={fetchOrder} className="text-primary-600 hover:text-primary-700 text-sm font-medium">
+          {t('orders.retry')}
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">

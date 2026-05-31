@@ -16,7 +16,7 @@ router.get('/my-orders', authenticate, listCustomerOrders);
 
 // Staff: list and manage orders
 router.get('/', authenticate, requireStaff, listOrders);
-router.get('/:id', authenticate, getOrder);
+router.get('/:id', optionalAuth, getOrder);
 router.patch('/:id/status', authenticate, requireStaff, updateOrderStatus);
 
 export default router;
