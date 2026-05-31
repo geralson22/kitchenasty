@@ -28,12 +28,7 @@ export default function MinimalHeader() {
                 <Link to="/account" className="text-sm text-gray-400 hover:text-gray-600">{user.name}</Link>
                 <button onClick={logout} className="text-sm text-gray-300 hover:text-gray-500">{t('nav.logout')}</button>
               </>
-            ) : (
-              <>
-                <Link to="/login" className="text-sm text-gray-400 hover:text-gray-600">{t('nav.login')}</Link>
-                <Link to="/register" className="text-sm text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 px-3 py-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-800">{t('nav.signUp')}</Link>
-              </>
-            )}
+            ) : null}
           </div>
 
           <div className="md:hidden flex items-center gap-1">
@@ -55,19 +50,14 @@ export default function MinimalHeader() {
               <Link key={link.to} to={link.to} onClick={() => setMobileOpen(false)} className={`block px-3 py-2 text-sm ${isActive(link.to) ? 'text-gray-900 dark:text-white' : 'text-gray-400'}`}>{link.label}</Link>
             ))}
             <div className="px-3 py-2"><LanguageSwitcher /></div>
-            <div className="border-t border-gray-100 dark:border-gray-800 pt-3 mt-3">
-              {user ? (
-                <>
-                  <Link to="/account" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-gray-400">{t('nav.myAccount')}</Link>
-                  <button onClick={() => { logout(); setMobileOpen(false); }} className="block w-full text-left px-3 py-2 text-sm text-gray-300">{t('nav.logout')}</button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-gray-400">{t('nav.login')}</Link>
-                  <Link to="/register" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-gray-900 dark:text-white">{t('nav.signUp')}</Link>
-                </>
-              )}
-            </div>
+<div className="border-t border-gray-100 dark:border-gray-800 pt-3 mt-3">
+                {user ? (
+                  <>
+                    <Link to="/account" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-gray-400">{t('nav.myAccount')}</Link>
+                    <button onClick={() => { logout(); setMobileOpen(false); }} className="block w-full text-left px-3 py-2 text-sm text-gray-300">{t('nav.logout')}</button>
+                  </>
+                ) : null}
+              </div>
           </div>
         </div>
       )}

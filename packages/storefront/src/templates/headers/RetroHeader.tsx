@@ -37,12 +37,7 @@ export default function RetroHeader() {
                 <Link to="/account" className="text-sm text-gray-700 hover:text-primary-600 font-semibold">{user.name}</Link>
                 <button onClick={logout} className="text-sm text-gray-500 hover:text-gray-700">{t('nav.logout')}</button>
               </>
-            ) : (
-              <>
-                <Link to="/login" className="text-sm text-gray-700 hover:text-primary-600 font-semibold">{t('nav.login')}</Link>
-                <Link to="/register" className="text-sm bg-primary-600 text-white px-4 py-2 rounded font-bold hover:bg-primary-700 border-2 border-primary-800 transition-colors">{t('nav.signUp')}</Link>
-              </>
-            )}
+            ) : null}
           </div>
 
           <div className="md:hidden flex items-center gap-1">
@@ -64,19 +59,14 @@ export default function RetroHeader() {
               <Link key={link.to} to={link.to} onClick={() => setMobileOpen(false)} className={`block px-3 py-2 text-sm font-semibold ${isActive(link.to) ? 'text-primary-700 bg-primary-200 rounded' : 'text-gray-700'}`}>{link.label}</Link>
             ))}
             <div className="px-3 py-2"><LanguageSwitcher /></div>
-            <div className="border-t border-amber-200 pt-3 mt-3">
-              {user ? (
-                <>
-                  <Link to="/account" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-gray-700 font-semibold">{t('nav.myAccount')}</Link>
-                  <button onClick={() => { logout(); setMobileOpen(false); }} className="block w-full text-left px-3 py-2 text-sm text-gray-500">{t('nav.logout')}</button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-gray-700 font-semibold">{t('nav.login')}</Link>
-                  <Link to="/register" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-primary-600 font-bold">{t('nav.signUp')}</Link>
-                </>
-              )}
-            </div>
+<div className="border-t border-amber-200 pt-3 mt-3">
+                {user ? (
+                  <>
+                    <Link to="/account" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-gray-700 font-semibold">{t('nav.myAccount')}</Link>
+                    <button onClick={() => { logout(); setMobileOpen(false); }} className="block w-full text-left px-3 py-2 text-sm text-gray-500">{t('nav.logout')}</button>
+                  </>
+                ) : null}
+              </div>
           </div>
         </div>
       )}

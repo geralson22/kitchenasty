@@ -37,12 +37,7 @@ export default function CozyHeader() {
                 <Link to="/account" className="text-sm text-gray-600 hover:text-gray-900">{user.name}</Link>
                 <button onClick={logout} className="text-sm text-gray-500 hover:text-gray-700">{t('nav.logout')}</button>
               </>
-            ) : (
-              <>
-                <Link to="/login" className="text-sm text-gray-600 hover:text-gray-900">{t('nav.login')}</Link>
-                <Link to="/register" className="text-sm bg-primary-600 text-white px-5 py-2 rounded-full hover:bg-primary-700 transition-colors">{t('nav.signUp')}</Link>
-              </>
-            )}
+            ) : null}
           </div>
 
           <div className="md:hidden flex items-center gap-1">
@@ -64,19 +59,14 @@ export default function CozyHeader() {
               <Link key={link.to} to={link.to} onClick={() => setMobileOpen(false)} className={`block px-3 py-2 rounded-full text-sm ${isActive(link.to) ? 'text-primary-700 bg-primary-100' : 'text-gray-600'}`}>{link.label}</Link>
             ))}
             <div className="px-3 py-2"><LanguageSwitcher /></div>
-            <div className="border-t border-amber-100 dark:border-gray-800 pt-3 mt-3">
-              {user ? (
-                <>
-                  <Link to="/account" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-gray-600">{t('nav.myAccount')}</Link>
-                  <button onClick={() => { logout(); setMobileOpen(false); }} className="block w-full text-left px-3 py-2 text-sm text-gray-500">{t('nav.logout')}</button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-gray-600">{t('nav.login')}</Link>
-                  <Link to="/register" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-primary-600">{t('nav.signUp')}</Link>
-                </>
-              )}
-            </div>
+<div className="border-t border-amber-100 dark:border-gray-800 pt-3 mt-3">
+                {user ? (
+                  <>
+                    <Link to="/account" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-gray-600">{t('nav.myAccount')}</Link>
+                    <button onClick={() => { logout(); setMobileOpen(false); }} className="block w-full text-left px-3 py-2 text-sm text-gray-500">{t('nav.logout')}</button>
+                  </>
+                ) : null}
+              </div>
           </div>
         </div>
       )}

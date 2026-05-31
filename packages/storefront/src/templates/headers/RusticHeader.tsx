@@ -37,12 +37,7 @@ export default function RusticHeader() {
                 <Link to="/account" className="text-sm text-stone-600 hover:text-stone-900">{user.name}</Link>
                 <button onClick={logout} className="text-sm text-stone-500 hover:text-stone-700">{t('nav.logout')}</button>
               </>
-            ) : (
-              <>
-                <Link to="/login" className="text-sm text-stone-600 hover:text-stone-900">{t('nav.login')}</Link>
-                <Link to="/register" className="text-sm bg-stone-700 text-stone-100 px-4 py-2 rounded hover:bg-stone-800 transition-colors">{t('nav.signUp')}</Link>
-              </>
-            )}
+            ) : null}
           </div>
 
           <div className="md:hidden flex items-center gap-1">
@@ -64,19 +59,14 @@ export default function RusticHeader() {
               <Link key={link.to} to={link.to} onClick={() => setMobileOpen(false)} className={`block px-3 py-2 text-sm ${isActive(link.to) ? 'text-primary-700 bg-stone-200' : 'text-stone-600'}`}>{link.label}</Link>
             ))}
             <div className="px-3 py-2"><LanguageSwitcher /></div>
-            <div className="border-t border-stone-200 pt-3 mt-3">
-              {user ? (
-                <>
-                  <Link to="/account" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-stone-600">{t('nav.myAccount')}</Link>
-                  <button onClick={() => { logout(); setMobileOpen(false); }} className="block w-full text-left px-3 py-2 text-sm text-stone-500">{t('nav.logout')}</button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-stone-600">{t('nav.login')}</Link>
-                  <Link to="/register" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-primary-600">{t('nav.signUp')}</Link>
-                </>
-              )}
-            </div>
+<div className="border-t border-stone-200 pt-3 mt-3">
+                {user ? (
+                  <>
+                    <Link to="/account" onClick={() => setMobileOpen(false)} className="block px-3 py-2 text-sm text-stone-600">{t('nav.myAccount')}</Link>
+                    <button onClick={() => { logout(); setMobileOpen(false); }} className="block w-full text-left px-3 py-2 text-sm text-stone-500">{t('nav.logout')}</button>
+                  </>
+                ) : null}
+              </div>
           </div>
         </div>
       )}
