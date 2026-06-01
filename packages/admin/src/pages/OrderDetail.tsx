@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { t } from '../utils/i18n';
+import PrintInvoice from '../components/PrintInvoice';
 
 interface OrderItem {
   id: string;
@@ -31,6 +32,7 @@ interface OrderDetail {
   subtotal: number;
   tax: number;
   deliveryFee: number;
+  deliveryZoneName: string | null;
   discount: number;
   total: number;
   comment: string | null;
@@ -167,130 +169,9 @@ export default function OrderDetailPage() {
           </svg>
           {t('printInvoice')}
         </button>
-      </div>
+</div>
 
-      <style>{`
-          @page {
-            size: 80mm auto;
-            margin: 0;
-          }
-          @media print {
-            body * { visibility: hidden; }
-            #print-invoice, #print-invoice * { visibility: visible; }
-            #print-invoice { 
-              position: absolute; 
-              left: 0; 
-              top: 0; 
-              width: 80mm;
-              padding: 2mm;
-              font-size: 11px;
-              line-height: 1.2;
-            }
-            .no-print { display: none !important; }
-          }
-        `}</style>
-
-      {/* Print-only Invoice */}
-      <div id="print-invoice" className="hidden print:block" style={{ width: '72mm', margin: '0 auto' }}>
-        <div className="text-center mb-2">
-          {settings.logo && <img src={settings.logo} alt="Logo" style={{ height: '20mm', marginBottom: '2mm', display: 'block', marginLeft: 'auto', marginRight: 'auto' }} />}
-          <h1 style={{ fontSize: '14px', fontWeight: 'bold', margin: '2px 0' }}>{settings.siteName}</h1>
-          <p style={{ fontSize: '10px', margin: '2px 0' }}>{t('orderInvoice')}</p>
-        </div>
-
-        <div style={{ borderTop: '1px dashed #000', borderBottom: '1px dashed #000', padding: '2mm 0', margin: '2mm 0' }}>
-          <p style={{ fontSize: '10px', margin: '1px 0' }}><strong>{t('customer')}:</strong> {order.customer?.name || order.guestName || t('guest')}</p>
-          {(order.customer?.phone || order.guestPhone) && <p style={{ fontSize: '10px', margin: '1px 0' }}>{order.customer?.phone || order.guestPhone}</p>}
-          <p style={{ fontSize: '10px', margin: '1px 0' }}><strong>{t('orderType')}:</strong> {order.orderType} - {order.location.name}</p>
-          <p style={{ fontSize: '10px', margin: '1px 0' }}>{new Date(order.createdAt).toLocaleString()}</p>
-          {order.scheduledAt && <p style={{ fontSize: '10px', margin: '1px 0' }}><strong>{t('scheduledFor')}:</strong> {new Date(order.scheduledAt).toLocaleString()}</p>}
-        </div>
-
-        {order.orderType === 'DELIVERY' && order.address && (
-          <div style={{ padding: '1mm 0' }}>
-            <p style={{ fontSize: '10px', margin: '1px 0' }}><strong>{t('deliveryAddress')}:</strong></p>
-            <p style={{ fontSize: '10px', margin: '1px 0' }}>{order.address.line1}</p>
-            {order.address.line2 && <p style={{ fontSize: '10px', margin: '1px 0' }}>{order.address.line2}</p>}
-            <p style={{ fontSize: '10px', margin: '1px 0' }}>{order.address.city}{order.address.state ? `, ${order.address.state}` : ''} {order.address.zip}</p>
-            {order.address.instructions && <p style={{ fontSize: '10px', margin: '1px 0', fontStyle: 'italic' }}>{t('note')}: {order.address.instructions}</p>}
-          </div>
-        )}
-
-        <div style={{ borderBottom: '1px dashed #000', paddingBottom: '1mm', marginBottom: '1mm' }}>
-          <p style={{ fontSize: '10px', fontWeight: 'bold', margin: '2px 0', textAlign: 'center' }}>================</p>
-        </div>
-
-        <table style={{ width: '100%', fontSize: '10px', marginBottom: '2mm' }}>
-          <thead>
-            <tr style={{ borderBottom: '1px solid #000' }}>
-              <th style={{ textAlign: 'left', padding: '1px 0' }}>{t('item')}</th>
-              <th style={{ textAlign: 'center', width: '10mm' }}>{t('qty')}</th>
-              <th style={{ textAlign: 'right', width: '18mm' }}>{t('total')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {order.items.map((item) => (
-              <tr key={item.id} style={{ verticalAlign: 'top' }}>
-                <td style={{ padding: '1px 0' }}>
-                  {item.quantity}x {item.name}
-                  {item.options.length > 0 && (
-                    <span style={{ display: 'block', fontSize: '9px', color: '#666' }}>
-                      {item.options.map((o) => `${o.name}: ${o.value}`).join(', ')}
-                    </span>
-                  )}
-                  {item.comment && <span style={{ display: 'block', fontSize: '9px', fontStyle: 'italic' }}>{t('note')}: {item.comment}</span>}
-                </td>
-                <td style={{ textAlign: 'center' }}>{item.quantity}</td>
-                <td style={{ textAlign: 'right' }}>${item.subtotal.toFixed(2)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <div style={{ borderTop: '1px dashed #000', paddingTop: '1mm', marginTop: '1mm' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', margin: '1px 0' }}>
-            <span>{t('subtotal')}</span>
-            <span>${order.subtotal.toFixed(2)}</span>
-          </div>
-          {order.discount > 0 && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: '#008800', margin: '1px 0' }}>
-              <span>{t('discount')}</span>
-              <span>-${order.discount.toFixed(2)}</span>
-            </div>
-          )}
-          {order.deliveryFee > 0 && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', margin: '1px 0' }}>
-              <span>{t('deliveryFee')}</span>
-              <span>${order.deliveryFee.toFixed(2)}</span>
-            </div>
-          )}
-          {order.tax > 0 && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', margin: '1px 0' }}>
-              <span>{t('tax')}</span>
-              <span>${order.tax.toFixed(2)}</span>
-            </div>
-          )}
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 'bold', margin: '2px 0', borderTop: '1px solid #000', paddingTop: '2px' }}>
-            <span>{t('total')}</span>
-            <span>${order.total.toFixed(2)}</span>
-          </div>
-        </div>
-
-        {order.paymentMethod && (
-          <div style={{ marginTop: '2mm', paddingTop: '1mm', borderTop: '1px dashed #000' }}>
-            <p style={{ fontSize: '10px', margin: '1px 0' }}><strong>{t('paymentMethod')}:</strong> {order.paymentMethod}</p>
-          </div>
-        )}
-
-        {order.comment && (
-          <div style={{ marginTop: '1mm' }}>
-            <p style={{ fontSize: '10px', margin: '1px 0' }}><strong>{t('orderNotes')}:</strong> {order.comment}</p>
-          </div>
-        )}
-
-        <p style={{ fontSize: '10px', textAlign: 'center', marginTop: '3mm' }}>================</p>
-        <p style={{ fontSize: '9px', textAlign: 'center', margin: '1px 0' }}>#{order.orderNumber}</p>
-      </div>
+<PrintInvoice order={order} settings={settings} t={t} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 no-print">
         {/* Main content */}
@@ -429,6 +310,9 @@ export default function OrderDetailPage() {
                     <span className="block text-xs text-gray-400">
                       {order.address.city}{order.address.state ? `, ${order.address.state}` : ''} {order.address.zip}
                     </span>
+                    {order.deliveryZoneName && (
+                      <span className="block text-xs text-gray-400">Zone: {order.deliveryZoneName} (${order.deliveryFee.toFixed(2)})</span>
+                    )}
                   </dd>
                 </div>
               )}

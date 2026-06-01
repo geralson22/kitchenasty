@@ -36,8 +36,8 @@ router.post('/favicon', authenticate, requireStaff, upload.single('favicon'), up
 router.get('/general', authenticate, requireRole('SUPER_ADMIN', 'MANAGER'), getGeneralSettings);
 router.put('/general', authenticate, requireRole('SUPER_ADMIN', 'MANAGER'), updateGeneralSettings);
 
-// Order — MANAGER+
-router.get('/order', authenticate, requireRole('SUPER_ADMIN', 'MANAGER'), getOrderSettings);
+// Order — public read, MANAGER+ for write
+router.get('/order', getOrderSettings);
 router.put('/order', authenticate, requireRole('SUPER_ADMIN', 'MANAGER'), updateOrderSettings);
 
 // Reservation — MANAGER+

@@ -28,6 +28,7 @@ const createOrderSchema = z.object({
   couponCode: z.string().optional(),
   address: z.object({
     line1: z.string().min(1),
+    line2: z.string().optional(),
     city: z.string().min(1),
     state: z.string().min(1),
     zip: z.string().min(1),
@@ -131,6 +132,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
 
   // Delivery zone enforcement
   let deliveryFee = 0;
+  let deliveryZoneName = null;
   if (orderType === 'DELIVERY') {
     if (address?.lat != null && address?.lng != null) {
       const zones = await prisma.deliveryZone.findMany({
@@ -154,6 +156,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
 
       if (matchedZone) {
         deliveryFee = matchedZone.charge;
+        deliveryZoneName = matchedZone.name;
       } else {
         deliveryFee = 4.99; // Fallback if no zones configured
       }
@@ -288,6 +291,54 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
 
   const totalDiscount = loyaltyDiscount + couponDiscount;
 
+  // Create or link address for delivery orders
+  let addressId = null;
+  if (orderType === 'DELIVERY' && address) {
+    if (customerId) {
+      // For authenticated customers, check if address exists or create new one
+      const existingAddress = await prisma.address.findFirst({
+        where: {
+          customerId,
+          line1: address.line1,
+          city: address.city,
+          state: address.state,
+          postalCode: address.zip,
+        },
+      });
+      if (existingAddress) {
+        addressId = existingAddress.id;
+      } else {
+        const newAddress = await prisma.address.create({
+          data: {
+            customerId,
+            line1: address.line1,
+            line2: address.line2 || null,
+            city: address.city,
+            state: address.state || null,
+            postalCode: address.zip,
+            lat: address.lat || null,
+            lng: address.lng || null,
+          },
+        });
+        addressId = newAddress.id;
+      }
+    } else {
+      // For guest orders, create an address record without customer
+      const guestAddress = await prisma.address.create({
+        data: {
+          line1: address.line1,
+          line2: address.line2 || null,
+          city: address.city,
+          state: address.state || null,
+          postalCode: address.zip,
+          lat: address.lat || null,
+          lng: address.lng || null,
+        },
+      });
+      addressId = guestAddress.id;
+    }
+  }
+
   // Check minimum order for delivery zone
   if (orderType === 'DELIVERY' && address?.lat != null && address?.lng != null) {
     const zones = await prisma.deliveryZone.findMany({
@@ -325,6 +376,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
       subtotal,
       tax,
       deliveryFee,
+      deliveryZoneName,
       discount: totalDiscount,
       total,
       couponId,
@@ -334,6 +386,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
       guestName: customerId ? undefined : guestName,
       guestEmail: customerId ? undefined : guestEmail,
       guestPhone: customerId ? undefined : guestPhone,
+      addressId,
       items: { create: orderItemsData },
     },
     include: {

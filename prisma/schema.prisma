@@ -81,8 +81,8 @@ model CustomerGroup {
 
 model Address {
   id         String  @id @default(cuid())
-  customerId String
-  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
   label      String?
   line1      String
   line2      String?
@@ -362,6 +362,7 @@ model Order {
   // Totals
   subtotal     Float
   deliveryFee  Float    @default(0)
+  deliveryZoneName String?
   tax          Float    @default(0)
   discount     Float    @default(0)
   tip          Float    @default(0)
