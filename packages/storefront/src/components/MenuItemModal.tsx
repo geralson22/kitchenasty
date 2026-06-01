@@ -292,7 +292,7 @@ export default function MenuItemModal({ itemId, onClose }: Props) {
 
               {/* Quantity & Add to cart */}
               <div className="mt-6 pt-4 border-t border-gray-200">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -310,7 +310,7 @@ export default function MenuItemModal({ itemId, onClose }: Props) {
                   </div>
                   <button
                     onClick={handleAddToCart}
-                    className="bg-primary-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-primary-700 transition-colors"
+                    className="bg-primary-500 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-primary-600 transition-colors"
                   >
                     {t('menu.addToCart')} &mdash; ${calculateTotal().toFixed(2)}
                   </button>

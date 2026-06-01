@@ -80,6 +80,11 @@ export default function Menu() {
       .finally(() => setItemsLoading(false));
   }, [itemsUrl]);
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Sync URL params
   useEffect(() => {
     const params: Record<string, string> = {};

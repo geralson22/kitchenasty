@@ -255,6 +255,7 @@ export default function Checkout() {
       navigate(`/order/${data.data.id}`, { state: { order: data.data } });
     } catch (err: any) {
       setError(err.message || t('common.error'));
+      showToast(err.message || t('common.error'), {}, 'error');
     } finally {
       setLoading(false);
     }

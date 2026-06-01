@@ -391,7 +391,7 @@ export async function getPublicPaymentSettings(_req: Request, res: Response): Pr
       stripeEnabled: data.stripeEnabled ?? false,
       paypalEnabled: data.paypalEnabled ?? false,
       cashEnabled: data.cashEnabled ?? true,
-      transferEnabled: data.transferEnabled ?? false,
+      transferEnabled: data.transferEnabled ?? true,
     },
   });
 }

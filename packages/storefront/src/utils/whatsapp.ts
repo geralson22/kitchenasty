@@ -5,6 +5,7 @@ interface OrderItem {
   quantity: number;
   name: string;
   options?: Array<{ name: string; value: string }>;
+  comment?: string;
 }
 
 interface OrderData {
@@ -12,17 +13,23 @@ interface OrderData {
   orderNumber: string;
   orderType: string;
   paymentMethod?: string;
+  subtotal?: number;
+  deliveryFee?: number;
+  tax?: number;
+  discount?: number;
   total: number;
   items: OrderItem[];
   comment?: string;
   guestName?: string;
   guestPhone?: string;
   guestEmail?: string;
+  freeDelivery?: boolean;
   address?: {
     line1: string;
     city: string;
     state: string;
     zip: string;
+    zoneName?: string;
   };
 }
 
@@ -36,30 +43,72 @@ export function buildWhatsAppMessage(
 ): string {
   const itemsText = order.items.map((item) => {
     const optionsText = item.options?.map((o) => `${o.name}: ${o.value}`).join(', ') || '';
-    return `${item.quantity}x ${item.name}${optionsText ? ` (${optionsText})` : ''}`;
+    const lines: string[] = [];
+    lines.push(`${item.quantity}x ${item.name}`);
+    if (optionsText) lines.push(`   ${optionsText}`);
+    if (item.comment) lines.push(`   📝 ${item.comment}`);
+    return lines.join('\n');
   }).join('\n');
 
   const paymentLabel = order.paymentMethod === 'STRIPE' ? t('whatsapp.stripe') :
     order.paymentMethod === 'PAYPAL' ? t('whatsapp.paypal') :
     order.paymentMethod === 'TRANSFER' ? t('whatsapp.transfer') : t('whatsapp.cash');
 
-  const orderUrl = `${baseUrl}/orders/${order.orderNumber}`;
+  const orderUrl = `${baseUrl}/order/${order.id}`;
 
-  const message =
-    `🛒 *${t('whatsapp.title')}*\n\n` +
-    `📦 *${t('whatsapp.order')}:* ${order.orderNumber}\n` +
-    `📍 *${t('whatsapp.type')}:* ${orderType === 'delivery' ? t('whatsapp.delivery') : t('whatsapp.pickup')}\n` +
-    `💳 *${t('whatsapp.payment')}:* ${paymentLabel}\n` +
-    `💰 *${t('whatsapp.total')}:* $${order.total.toFixed(2)}\n\n` +
-    `🍽️ *${t('whatsapp.items')}:*\n${itemsText}\n\n` +
-    (order.comment ? `📝 *${t('whatsapp.note')}:* ${order.comment}\n\n` : '') +
-    `👤 *${t('whatsapp.customer')}:* ${order.guestName || t('whatsapp.na')}\n` +
-    `📞 *${t('whatsapp.phone')}:* ${order.guestPhone || t('whatsapp.na')}\n` +
-    (order.guestEmail ? `📧 *${t('whatsapp.email')}:* ${order.guestEmail}\n\n` : '\n') +
-    (orderType === 'delivery' && order.address ? `📍 *${t('whatsapp.address')}:* ${order.address.line1}, ${order.address.city}, ${order.address.state} ${order.address.zip}\n\n` : '\n') +
-    `🔗 *${t('whatsapp.viewOrder')}:* ${orderUrl}`;
+  const lines: string[] = [];
+  lines.push(`🛒 *${t('whatsapp.title')}*`);
+  lines.push(`📦 *${t('whatsapp.order')}:* ${order.orderNumber}`);
+  lines.push(`📍 *${t('whatsapp.type')}:* ${orderType === 'delivery' ? t('whatsapp.delivery') : t('whatsapp.pickup')}`);
+  lines.push(`💳 *${t('whatsapp.payment')}:* ${paymentLabel}`);
 
-  return message;
+  lines.push('');
+  lines.push(`🍽️ *${t('whatsapp.items')}:*`);
+  lines.push(itemsText);
+
+  if (order.comment) {
+    lines.push('');
+    lines.push(`📝 *${t('whatsapp.note')}:* ${order.comment}`);
+  }
+
+  lines.push('');
+  lines.push(`💰 *${t('whatsapp.subtotal')}:* $${(order.subtotal ?? 0).toFixed(2)}`);
+
+  if (orderType === 'delivery') {
+    const deliveryLabel = order.freeDelivery ? t('whatsapp.freeDelivery') : t('whatsapp.deliveryFee');
+    const deliveryAmount = order.freeDelivery ? t('whatsapp.free') : `$${(order.deliveryFee ?? 0).toFixed(2)}`;
+    lines.push(`🚗 *${deliveryLabel}:* ${deliveryAmount}`);
+
+    if (order.address?.zoneName) {
+      lines.push(`📍 *${t('whatsapp.zone')}:* ${order.address.zoneName}`);
+    }
+  }
+
+  if ((order.tax ?? 0) > 0) {
+    lines.push(`🏛️ *${t('whatsapp.tax')}:* $${order.tax!.toFixed(2)}`);
+  }
+
+  if ((order.discount ?? 0) > 0) {
+    lines.push(`🎁 *${t('whatsapp.discount')}:* -$${order.discount!.toFixed(2)}`);
+  }
+
+  lines.push(`💵 *${t('whatsapp.total')}:* $${order.total.toFixed(2)}`);
+
+  lines.push('');
+  lines.push(`👤 *${t('whatsapp.customer')}:* ${order.guestName || t('whatsapp.na')}`);
+  lines.push(`📞 *${t('whatsapp.phone')}:* ${order.guestPhone || t('whatsapp.na')}`);
+  if (order.guestEmail) {
+    lines.push(`📧 *${t('whatsapp.email')}:* ${order.guestEmail}`);
+  }
+
+  if (orderType === 'delivery' && order.address) {
+    lines.push(`📍 *${t('whatsapp.address')}:* ${order.address.line1}, ${order.address.city}, ${order.address.state} ${order.address.zip}`);
+  }
+
+  lines.push('');
+  lines.push(`🔗 *${t('whatsapp.viewOrder')}:* ${orderUrl}`);
+
+  return lines.join('\n');
 }
 
 export function getWhatsAppUrl(
