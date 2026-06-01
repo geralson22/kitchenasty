@@ -176,6 +176,70 @@ export default function OrderDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 no-print">
         {/* Main content */}
         <div className="lg:col-span-2 space-y-6">
+          {/* Details */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Details</h2>
+            <dl className="space-y-3 text-sm">
+              <div>
+                <dt className="text-gray-500">Order Type</dt>
+                <dd className="font-medium text-gray-900">{order.orderType}</dd>
+              </div>
+              <div>
+                <dt className="text-gray-500">Location</dt>
+                <dd className="font-medium text-gray-900">{order.location.name}</dd>
+              </div>
+              <div>
+                <dt className="text-gray-500">Customer</dt>
+                <dd className="font-medium text-gray-900">
+                  {order.customer ? (
+                    <>
+                      {order.customer.name}
+                      <span className="block text-xs text-gray-400">{order.customer.email}</span>
+                      {order.customer.phone && (
+                        <span className="block text-xs text-gray-400">{order.customer.phone}</span>
+                      )}
+                    </>
+                  ) : order.guestName ? (
+                    <>
+                      {order.guestName}
+                      {order.guestPhone && (
+                        <span className="block text-xs text-gray-400">{order.guestPhone}</span>
+                      )}
+                      {order.guestEmail && (
+                        <span className="block text-xs text-gray-400">{order.guestEmail}</span>
+                      )}
+                    </>
+                  ) : (
+                    <span className="text-gray-400">Guest</span>
+                  )}
+                </dd>
+              </div>
+              {order.orderType === 'DELIVERY' && order.address && (
+                <div>
+                  <dt className="text-gray-500">Delivery Address</dt>
+                  <dd className="font-medium text-gray-900">
+                    {order.address.line1}
+                    {order.address.line2 && <>, {order.address.line2}</>}
+                    <span className="block text-xs text-gray-400">
+                      {order.address.city}{order.address.state ? `, ${order.address.state}` : ''} {order.address.zip}
+                    </span>
+                    {order.deliveryZoneName && (
+                      <span className="block text-xs text-gray-400">Zone: {order.deliveryZoneName} (${order.deliveryFee.toFixed(2)})</span>
+                    )}
+                  </dd>
+                </div>
+              )}
+              {order.scheduledAt && (
+                <div>
+                  <dt className="text-gray-500">Scheduled For</dt>
+                  <dd className="font-medium text-gray-900">
+                    {new Date(order.scheduledAt).toLocaleString()}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </div>
+
           {/* Items */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Items</h2>
@@ -261,70 +325,6 @@ export default function OrderDetailPage() {
                 </button>
               ))}
             </div>
-          </div>
-
-          {/* Order info */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Details</h2>
-            <dl className="space-y-3 text-sm">
-              <div>
-                <dt className="text-gray-500">Order Type</dt>
-                <dd className="font-medium text-gray-900">{order.orderType}</dd>
-              </div>
-              <div>
-                <dt className="text-gray-500">Location</dt>
-                <dd className="font-medium text-gray-900">{order.location.name}</dd>
-              </div>
-              <div>
-                <dt className="text-gray-500">Customer</dt>
-                <dd className="font-medium text-gray-900">
-                  {order.customer ? (
-                    <>
-                      {order.customer.name}
-                      <span className="block text-xs text-gray-400">{order.customer.email}</span>
-                      {order.customer.phone && (
-                        <span className="block text-xs text-gray-400">{order.customer.phone}</span>
-                      )}
-                    </>
-                  ) : order.guestName ? (
-                    <>
-                      {order.guestName}
-                      {order.guestPhone && (
-                        <span className="block text-xs text-gray-400">{order.guestPhone}</span>
-                      )}
-                      {order.guestEmail && (
-                        <span className="block text-xs text-gray-400">{order.guestEmail}</span>
-                      )}
-                    </>
-                  ) : (
-                    <span className="text-gray-400">Guest</span>
-                  )}
-                </dd>
-              </div>
-              {order.orderType === 'DELIVERY' && order.address && (
-                <div>
-                  <dt className="text-gray-500">Delivery Address</dt>
-                  <dd className="font-medium text-gray-900">
-                    {order.address.line1}
-                    {order.address.line2 && <>, {order.address.line2}</>}
-                    <span className="block text-xs text-gray-400">
-                      {order.address.city}{order.address.state ? `, ${order.address.state}` : ''} {order.address.zip}
-                    </span>
-                    {order.deliveryZoneName && (
-                      <span className="block text-xs text-gray-400">Zone: {order.deliveryZoneName} (${order.deliveryFee.toFixed(2)})</span>
-                    )}
-                  </dd>
-                </div>
-              )}
-              {order.scheduledAt && (
-                <div>
-                  <dt className="text-gray-500">Scheduled For</dt>
-                  <dd className="font-medium text-gray-900">
-                    {new Date(order.scheduledAt).toLocaleString()}
-                  </dd>
-                </div>
-              )}
-            </dl>
           </div>
         </div>
       </div>

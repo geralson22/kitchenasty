@@ -28,6 +28,8 @@ interface DashboardData {
     orderType: string;
     createdAt: string;
     customer: { name: string } | null;
+    guestName?: string;
+    guestPhone?: string;
   }[];
   topItems: {
     menuItemId: string;
@@ -224,7 +226,7 @@ export default function Dashboard() {
                       <div>
                         <span className="font-mono text-xs font-medium text-gray-900">{order.orderNumber}</span>
                         <span className="text-xs text-gray-500 ml-2">
-                          {order.customer?.name || 'Guest'}
+                          {order.customer ? order.customer.name : order.guestName ? order.guestName : order.guestPhone ? order.guestPhone : <span className="text-gray-400">Guest</span>}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">

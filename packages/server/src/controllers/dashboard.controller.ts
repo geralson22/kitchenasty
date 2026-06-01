@@ -73,6 +73,8 @@ export async function getDashboardStats(req: Request, res: Response): Promise<vo
         orderType: true,
         createdAt: true,
         customer: { select: { name: true } },
+        guestName: true,
+        guestPhone: true,
       },
     }),
     // Top selling items (by order item count)
