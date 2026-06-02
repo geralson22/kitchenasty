@@ -1,4 +1,5 @@
 import { useState, FormEvent } from 'react';
+import { useSiteSettings } from '../hooks/useSiteSettings.js';
 
 interface Props {
   onLogin: (token: string) => void;
@@ -9,6 +10,7 @@ export default function Login({ onLogin }: Props) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { siteName } = useSiteSettings();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -35,7 +37,7 @@ export default function Login({ onLogin }: Props) {
     <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-primary-400">KitchenAsty</h1>
+          <h1 className="text-3xl font-bold" style={{ color: 'var(--color-primary-400, #fb923c)' }}>{siteName}</h1>
           <p className="text-gray-400 mt-1 text-sm">Admin Panel</p>
         </div>
 

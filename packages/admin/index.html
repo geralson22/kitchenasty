@@ -3,7 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KitchenAsty Admin</title>
+    <title>Admin Panel</title>
+    <script>
+      fetch('/api/settings')
+        .then(function(r){ return r.json(); })
+        .then(function(json){
+          if (json.success && json.data && json.data.siteName) {
+            document.title = json.data.siteName + ' Admin';
+          }
+        })
+        .catch(function(){});
+    </script>
   </head>
   <body>
     <div id="root"></div>

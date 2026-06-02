@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
+import { useSiteSettings } from '../hooks/useSiteSettings.js';
 
 type Role = 'SUPER_ADMIN' | 'MANAGER' | 'STAFF';
 
@@ -87,12 +88,12 @@ export default function AdminLayout({ children, onLogout }: { children: React.Re
   const [pendingCount, setPendingCount] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { siteName } = useSiteSettings();
 
   const filteredNav = user
     ? navItems.filter((item) => item.roles.includes(user.role))
     : [];
 
-  // Poll pending order count
   useEffect(() => {
     if (!token) return;
 
@@ -103,7 +104,7 @@ export default function AdminLayout({ children, onLogout }: { children: React.Re
         });
         const data = await res.json();
         if (data.success && data.data) {
-          setPendingCount(data.data.pendingOrders ?? 0);
+ setPendingCount(data.data.pendingOrders ?? 0);
         }
       } catch { /* ignore */ }
     }
@@ -113,7 +114,6 @@ export default function AdminLayout({ children, onLogout }: { children: React.Re
     return () => clearInterval(interval);
   }, [token]);
 
-  // Close dropdown on click outside
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -128,10 +128,9 @@ export default function AdminLayout({ children, onLogout }: { children: React.Re
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
       <aside className="w-64 bg-gray-900 text-white flex flex-col" role="navigation" aria-label="Main navigation">
         <div className="px-6 py-4 border-b border-gray-700">
-          <h1 className="text-xl font-bold text-primary-400">KitchenAsty</h1>
+          <h1 className="text-xl font-bold" style={{ color: 'var(--color-primary-400, #fb923c)' }}>{siteName}</h1>
           <p className="text-xs text-gray-400 mt-1">Admin Panel</p>
         </div>
         <nav className="flex-1 py-4">
@@ -173,7 +172,6 @@ export default function AdminLayout({ children, onLogout }: { children: React.Re
           })}
         </nav>
 
-        {/* User info at bottom of sidebar */}
         {user && (
           <div className="px-6 py-4 border-t border-gray-700">
             <p className="text-sm font-medium text-white truncate">{user.name}</p>
@@ -184,12 +182,10 @@ export default function AdminLayout({ children, onLogout }: { children: React.Re
         )}
       </aside>
 
-      {/* Main content */}
       <div className="flex-1 flex flex-col">
         <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
           <div />
           <div className="flex items-center gap-3">
-            {/* Notifications bell */}
             <Link
               to="/orders?status=PENDING"
               className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors"
@@ -209,7 +205,6 @@ export default function AdminLayout({ children, onLogout }: { children: React.Re
               )}
             </Link>
 
-            {/* Settings gear */}
             {isManagerPlus && (
               <Link
                 to="/settings"
@@ -224,10 +219,8 @@ export default function AdminLayout({ children, onLogout }: { children: React.Re
               </Link>
             )}
 
-            {/* Separator */}
             <div className="w-px h-6 bg-gray-200" />
 
-            {/* User avatar + dropdown */}
             {user && (
               <div className="relative" ref={dropdownRef}>
                 <button
