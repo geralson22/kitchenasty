@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
+import { useToast } from '../context/ToastContext.js';
 import { useSiteSettings } from '../hooks/useSiteSettings.js';
+import { playNewOrderSound } from '../lib/audio.js';
 
 type Role = 'SUPER_ADMIN' | 'MANAGER' | 'STAFF';
 
@@ -89,6 +91,8 @@ export default function AdminLayout({ children, onLogout }: { children: React.Re
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { siteName } = useSiteSettings();
+  const { showToast } = useToast();
+  const lastOrderIdRef = useRef<string | null>(null);
 
   const filteredNav = user
     ? navItems.filter((item) => item.roles.includes(user.role))
@@ -104,7 +108,7 @@ export default function AdminLayout({ children, onLogout }: { children: React.Re
         });
         const data = await res.json();
         if (data.success && data.data) {
- setPendingCount(data.data.pendingOrders ?? 0);
+          setPendingCount(data.data.pendingOrders ?? 0);
         }
       } catch { /* ignore */ }
     }
@@ -123,6 +127,45 @@ export default function AdminLayout({ children, onLogout }: { children: React.Re
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
+
+  useEffect(() => {
+    if (!token) return;
+
+    let mounted = true;
+
+    async function pollNewOrders() {
+      if (!mounted || !token) return;
+      try {
+        const res = await fetch('/api/orders?status=PENDING&limit=1', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        if (data.success && data.data && data.data.length > 0) {
+          const latestOrder = data.data[0];
+          if (lastOrderIdRef.current && latestOrder.id !== lastOrderIdRef.current) {
+            playNewOrderSound();
+            showToast(
+              `New order ${latestOrder.orderNumber} (${latestOrder.orderType}) — $${Number(latestOrder.total || 0).toFixed(2)}`,
+              'prompt',
+              0,
+              {
+                label: 'View',
+                onClick: () => { window.location.href = `/orders/${latestOrder.id}`; },
+              }
+            );
+          }
+          lastOrderIdRef.current = latestOrder.id;
+        }
+      } catch { /* ignore */ }
+    }
+
+    pollNewOrders();
+    const interval = setInterval(pollNewOrders, 15000);
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
+  }, [token, showToast]);
 
   const isManagerPlus = user && (user.role === 'SUPER_ADMIN' || user.role === 'MANAGER');
 

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.js';
+import { ToastProvider } from './context/ToastContext.js';
 import AdminLayout from './components/AdminLayout.js';
 import RequireRole from './components/RequireRole.js';
 import Login from './pages/Login.js';
@@ -140,7 +141,9 @@ function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <AuthProvider>
-        <AppRoutes />
+        <ToastProvider>
+          <AppRoutes />
+        </ToastProvider>
       </AuthProvider>
     </BrowserRouter>
   );
