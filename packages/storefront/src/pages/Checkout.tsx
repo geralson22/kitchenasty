@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, useRef, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useCart, useToast } from '../context/CartContext.js';
@@ -40,6 +40,15 @@ export default function Checkout() {
   // Dynamic delivery fee from zone check
   const [deliveryFee, setDeliveryFee] = useState(4.99);
   const [zoneError, setZoneError] = useState('');
+
+  // Refs for focus management
+  const guestNameRef = useRef<HTMLInputElement>(null);
+  const guestPhoneRef = useRef<HTMLInputElement>(null);
+  const addressLine1Ref = useRef<HTMLInputElement>(null);
+  const cityRef = useRef<HTMLInputElement>(null);
+  const stateRef = useRef<HTMLInputElement>(null);
+  const zipRef = useRef<HTMLInputElement>(null);
+  const zoneRef = useRef<HTMLSelectElement>(null);
 
   // Busy mode
   const [isBusy, setIsBusy] = useState(false);
@@ -207,15 +216,54 @@ export default function Checkout() {
       }
 
       if (orderType === 'delivery') {
+        (document.activeElement as HTMLElement)?.blur();
         if (!selectedZoneId) {
-          setError(t('checkout.selectZoneError') || 'Please select a delivery zone');
+          setError(t('checkout.selectZoneError'));
           setLoading(false);
+          showToast('checkout.selectZoneError');
+          setTimeout(() => {
+            const section = document.getElementById('delivery-address-section');
+            section?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            zoneRef.current?.focus();
+            if (zoneRef.current?.showPicker) {
+              zoneRef.current.showPicker();
+            }
+          }, 100);
           return;
         }
         const selectedZone = availableZones.find((z) => z.id === selectedZoneId);
         if (selectedZone && subtotal < selectedZone.minOrder) {
-          setError(`${t('checkout.minOrderError') || 'Minimum order for'} ${selectedZone.name}: $${selectedZone.minOrder.toFixed(2)}`);
+          setError(`${t('checkout.minOrderError')} ${selectedZone.name}: $${selectedZone.minOrder.toFixed(2)}`);
           setLoading(false);
+          showToast('checkout.minOrderError');
+          setTimeout(() => {
+            const section = document.getElementById('delivery-address-section');
+            section?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            zoneRef.current?.focus();
+            if (zoneRef.current?.showPicker) {
+              zoneRef.current.showPicker();
+            }
+          }, 100);
+          return;
+        }
+        if (!address.line1.trim()) {
+          setError(t('checkout.addressRequired'));
+          setLoading(false);
+          showToast('checkout.addressRequired');
+          setTimeout(() => {
+            addressLine1Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            addressLine1Ref.current?.focus();
+          }, 100);
+          return;
+        }
+        if (!address.city.trim()) {
+          setError(t('checkout.cityRequired'));
+          setLoading(false);
+          showToast('checkout.cityRequired');
+          setTimeout(() => {
+            cityRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            cityRef.current?.focus();
+          }, 100);
           return;
         }
         body.address = address;
@@ -224,6 +272,27 @@ export default function Checkout() {
 
       // Guest info
       if (!user) {
+        (document.activeElement as HTMLElement)?.blur();
+        if (!guestName.trim()) {
+          setError(t('checkout.nameRequired'));
+          setLoading(false);
+          showToast('checkout.nameRequired');
+          setTimeout(() => {
+            guestNameRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            guestNameRef.current?.focus();
+          }, 100);
+          return;
+        }
+        if (!guestPhone.trim()) {
+          setError(t('checkout.phoneRequired'));
+          setLoading(false);
+          showToast('checkout.phoneRequired');
+          setTimeout(() => {
+            guestPhoneRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            guestPhoneRef.current?.focus();
+          }, 100);
+          return;
+        }
         body.guestName = guestName;
         if (guestEmail) body.guestEmail = guestEmail;
         body.guestPhone = guestPhone || undefined;
@@ -310,7 +379,7 @@ export default function Checkout() {
 
           {/* Delivery address */}
           {orderType === 'delivery' && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div id="delivery-address-section" className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('checkout.deliveryAddress')}</h2>
               {zoneError && (
                 <div className="bg-red-50 text-red-700 p-3 rounded-lg text-sm mb-3">{zoneError}</div>
@@ -319,6 +388,7 @@ export default function Checkout() {
                 <input
                   type="text"
                   required
+                  ref={addressLine1Ref}
                   placeholder={t('checkout.addressLine1')}
                   value={address.line1}
                   onChange={(e) => { const next = { ...address, line1: e.target.value }; setAddress(next); localStorage.setItem('checkoutAddress', JSON.stringify(next)); }}
@@ -328,25 +398,28 @@ export default function Checkout() {
                   <input
                     type="text"
                     required
-                  placeholder={t('checkout.city')}
-                  value={address.city}
-                  onChange={(e) => { const next = { ...address, city: e.target.value }; setAddress(next); localStorage.setItem('checkoutAddress', JSON.stringify(next)); }}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
-                />
-                <input
-                  type="text"
-                  required
-                  placeholder={t('checkout.state')}
-                  value={address.state}
-                  onChange={(e) => { const next = { ...address, state: e.target.value }; setAddress(next); localStorage.setItem('checkoutAddress', JSON.stringify(next)); }}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
-                />
-                <input
-                  type="text"
-                  required
-                  placeholder={t('checkout.zipCode')}
-                  value={address.zip}
-                  onChange={(e) => { const next = { ...address, zip: e.target.value }; setAddress(next); localStorage.setItem('checkoutAddress', JSON.stringify(next)); }}
+                    ref={cityRef}
+                    placeholder={t('checkout.city')}
+                    value={address.city}
+                    onChange={(e) => { const next = { ...address, city: e.target.value }; setAddress(next); localStorage.setItem('checkoutAddress', JSON.stringify(next)); }}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
+                  />
+                  <input
+                    type="text"
+                    required
+                    ref={stateRef}
+                    placeholder={t('checkout.state')}
+                    value={address.state}
+                    onChange={(e) => { const next = { ...address, state: e.target.value }; setAddress(next); localStorage.setItem('checkoutAddress', JSON.stringify(next)); }}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
+                  />
+                  <input
+                    type="text"
+                    required
+                    ref={zipRef}
+                    placeholder={t('checkout.zipCode')}
+                    value={address.zip}
+                    onChange={(e) => { const next = { ...address, zip: e.target.value }; setAddress(next); localStorage.setItem('checkoutAddress', JSON.stringify(next)); }}
                     className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
                   />
                 </div>
@@ -356,6 +429,7 @@ export default function Checkout() {
                       {t('checkout.selectDeliveryZone') || 'Delivery Zone'}
                     </label>
                     <select
+                      ref={zoneRef}
                       value={selectedZoneId}
                       onChange={(e) => {
                         setSelectedZoneId(e.target.value);
@@ -461,6 +535,7 @@ export default function Checkout() {
                 <input
                   type="text"
                   required
+                  ref={guestNameRef}
                   placeholder={t('checkout.fullName')}
                   value={guestName}
                   onChange={(e) => { setGuestName(e.target.value); localStorage.setItem('checkoutGuestName', e.target.value); }}
@@ -469,6 +544,7 @@ export default function Checkout() {
                 <input
                   type="tel"
                   required
+                  ref={guestPhoneRef}
                   placeholder={t('checkout.phoneNumber')}
                   value={guestPhone}
                   onChange={(e) => { setGuestPhone(e.target.value); localStorage.setItem('checkoutGuestPhone', e.target.value); }}

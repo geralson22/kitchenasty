@@ -173,6 +173,10 @@
     "selectZone": "Selecciona una zona...",
     "selectZoneError": "Por favor selecciona una zona de entrega",
     "minOrderError": "Pedido mínimo para",
+    "addressRequired": "La dirección es obligatoria",
+    "cityRequired": "La ciudad es obligatoria",
+    "nameRequired": "El nombre es obligatorio",
+    "phoneRequired": "El teléfono es obligatorio",
     "minOrderDelivery": "pedido mínimo entrega",
     "couponAppliedSuccess": "¡Cupón aplicado!"
   },
