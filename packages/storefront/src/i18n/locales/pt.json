@@ -131,7 +131,7 @@
     "pickup": "Retirada",
     "deliveryAddress": "Endereço de Entrega",
     "addressLine1": "Endereço Linha 1",
-    "addressLine2": "Endereço Linha 2 (opcional)",
+    "addressLine2": "Entre ruas *",
     "city": "Cidade",
     "state": "Estado",
     "zipCode": "CEP",
@@ -174,7 +174,9 @@
     "selectZoneError": "Por favor selecione uma zona de entrega",
     "minOrderError": "Pedido mínimo para",
     "minOrderDelivery": "pedido mínimo entrega",
-    "couponAppliedSuccess": "Cupom aplicado!"
+    "couponAppliedSuccess": "Cupom aplicado!",
+    "addressLine2Required": "Entre ruas é obrigatório",
+    "between": "Entre"
   },
   "orderConfirmation": {
     "title": "Pedido realizado!",
@@ -209,8 +211,9 @@
     "cash": "Dinheiro",
     "stripe": "Cartão",
     "paypal": "PayPal",
-    "transfer": "Transferência",
-    "viewOrder": "Ver Pedido"
+"transfer": "Transferência",
+    "viewOrder": "Ver Pedido",
+    "between": "Entre"
   },
   "orders": {
     "title": "Histórico de Pedidos",

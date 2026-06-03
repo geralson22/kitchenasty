@@ -131,7 +131,7 @@
     "pickup": "Pickup",
     "deliveryAddress": "Delivery Address",
     "addressLine1": "Address Line 1",
-    "addressLine2": "Address Line 2 (optional)",
+    "addressLine2": "Between streets *",
     "city": "City",
     "state": "State",
     "zipCode": "ZIP Code",
@@ -178,7 +178,9 @@
     "nameRequired": "Name is required",
     "phoneRequired": "Phone is required",
     "minOrderDelivery": "min order delivery",
-    "couponAppliedSuccess": "Coupon applied!"
+    "couponAppliedSuccess": "Coupon applied!",
+    "addressLine2Required": "Between streets is required",
+    "between": "Entre"
   },
   "orderConfirmation": {
     "title": "Order Placed!",
@@ -213,8 +215,9 @@
     "cash": "Cash",
     "stripe": "Credit Card",
     "paypal": "PayPal",
-    "transfer": "Transfer",
-    "viewOrder": "View Order"
+"transfer": "Transfer",
+    "viewOrder": "View Order",
+    "between": "Between"
   },
   "orders": {
     "title": "Order History",

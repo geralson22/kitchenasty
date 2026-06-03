@@ -19,7 +19,7 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('CASH');
   const [address, setAddress] = useState(() => {
     const saved = localStorage.getItem('checkoutAddress');
-    return saved ? JSON.parse(saved) : { line1: '', city: 'La Plata', state: 'La Plata', zip: '1900' };
+    return saved ? JSON.parse(saved) : { line1: '', line2: '', city: 'La Plata', state: 'La Plata', zip: '1900' };
   });
   const [scheduledAt, setScheduledAt] = useState('');
   const [comment, setComment] = useState('');
@@ -256,6 +256,16 @@ export default function Checkout() {
           }, 100);
           return;
         }
+        if (!address.line2.trim()) {
+          setError(t('checkout.addressLine2Required') || 'Address line 2 is required');
+          setLoading(false);
+          showToast('checkout.addressLine2Required');
+          setTimeout(() => {
+            document.getElementById('address-line2')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById('address-line2')?.focus();
+          }, 100);
+          return;
+        }
         if (!address.city.trim()) {
           setError(t('checkout.cityRequired'));
           setLoading(false);
@@ -392,6 +402,15 @@ export default function Checkout() {
                   placeholder={t('checkout.addressLine1')}
                   value={address.line1}
                   onChange={(e) => { const next = { ...address, line1: e.target.value }; setAddress(next); localStorage.setItem('checkoutAddress', JSON.stringify(next)); }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
+                />
+                <input
+                  type="text"
+                  required
+                  id="address-line2"
+                  placeholder={t('checkout.addressLine2')}
+                  value={address.line2}
+                  onChange={(e) => { const next = { ...address, line2: e.target.value }; setAddress(next); localStorage.setItem('checkoutAddress', JSON.stringify(next)); }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
                 />
                 <div className="grid grid-cols-3 gap-3">

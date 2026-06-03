@@ -219,7 +219,7 @@ export default function OrderDetailPage() {
                   <dt className="text-gray-500">Delivery Address</dt>
                   <dd className="font-medium text-gray-900">
                     {order.address.line1}
-                    {order.address.line2 && <>, {order.address.line2}</>}
+                    <span className="block">{t('between')}: {order.address.line2}</span>
                     <span className="block text-xs text-gray-400">
                       {order.address.city}{order.address.state ? `, ${order.address.state}` : ''} {order.address.zip}
                     </span>

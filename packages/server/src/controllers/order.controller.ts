@@ -28,7 +28,7 @@ const createOrderSchema = z.object({
   couponCode: z.string().optional(),
   address: z.object({
     line1: z.string().min(1),
-    line2: z.string().optional(),
+    line2: z.string().min(1),
     city: z.string().min(1),
     state: z.string().min(1),
     zip: z.string().min(1),

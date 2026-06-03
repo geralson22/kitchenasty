@@ -131,7 +131,7 @@
     "pickup": "Ritiro",
     "deliveryAddress": "Indirizzo di Consegna",
     "addressLine1": "Indirizzo Riga 1",
-    "addressLine2": "Indirizzo Riga 2 (opzionale)",
+    "addressLine2": "Tra le vie *",
     "city": "Città",
     "state": "Provincia",
     "zipCode": "CAP",
@@ -174,7 +174,9 @@
     "selectZoneError": "Seleziona una zona di consegna",
     "minOrderError": "Ordine minimo per",
     "minOrderDelivery": "ordine minimo consegna",
-    "couponAppliedSuccess": "Coupon applicato!"
+    "couponAppliedSuccess": "Coupon applicato!",
+    "addressLine2Required": "Tra le vie è obbligatorio",
+    "between": "Entre"
   },
   "orderConfirmation": {
     "title": "Ordine effettuato!",
@@ -209,8 +211,9 @@
     "cash": "Contanti",
     "stripe": "Carta",
     "paypal": "PayPal",
-    "transfer": "Bonifico",
-    "viewOrder": "Vedi Ordine"
+"transfer": "Bonifico",
+    "viewOrder": "Vedi Ordine",
+    "between": "Tra"
   },
   "orders": {
     "title": "Cronologia Ordini",

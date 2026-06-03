@@ -5,6 +5,8 @@ export const translations = {
     guest: 'Invitado',
     phone: 'Teléfono',
     address: 'Dirección',
+    addressLine2: 'Entre calles',
+    between: 'Entre',
     zone: 'Zona',
     orderType: 'Tipo de Pedido',
     deliveryAddress: 'Dirección de Entrega',
@@ -32,6 +34,8 @@ export const translations = {
     guest: 'Guest',
     phone: 'Phone',
     address: 'Address',
+    addressLine2: 'Between streets',
+    between: 'Between',
     zone: 'Zone',
     orderType: 'Order Type',
     deliveryAddress: 'Delivery Address',
@@ -55,14 +59,12 @@ export const translations = {
   },
 };
 
-type TranslationKey = keyof typeof translations.en;
-
-export function t(key: TranslationKey): string {
-  const lang = 'es';
-  return translations[lang][key] || translations.en[key] || key;
+export function t(key: string): string {
+  const lang = 'es' as const;
+  return (translations[lang] as Record<string, string>)[key] || (translations.en as Record<string, string>)[key] || key;
 }
 
 export function translatePaymentMethod(method: string | null): string {
   if (!method) return '';
-  return t(method as TranslationKey) || method;
+  return t(method) || method;
 }

@@ -131,7 +131,7 @@
     "pickup": "À Emporter",
     "deliveryAddress": "Adresse de Livraison",
     "addressLine1": "Adresse Ligne 1",
-    "addressLine2": "Adresse Ligne 2 (optionnel)",
+    "addressLine2": "Entre les rues *",
     "city": "Ville",
     "state": "Région",
     "zipCode": "Code Postal",
@@ -174,7 +174,9 @@
     "selectZoneError": "Veuillez sélectionner une zone de livraison",
     "minOrderError": "Commande minimum pour",
     "minOrderDelivery": "commande minimum livraison",
-    "couponAppliedSuccess": "Coupon appliqué !"
+    "couponAppliedSuccess": "Coupon appliqué !",
+    "addressLine2Required": "Entre les rues est obligatoire",
+    "between": "Entre"
   },
   "orderConfirmation": {
     "title": "Commande passée !",
@@ -209,8 +211,9 @@
     "cash": "Espèces",
     "stripe": "Carte",
     "paypal": "PayPal",
-    "transfer": "Virement",
-    "viewOrder": "Voir la Commande"
+"transfer": "Virement",
+    "viewOrder": "Voir la Commande",
+    "between": "Entre"
   },
   "orders": {
     "title": "Historique des Commandes",

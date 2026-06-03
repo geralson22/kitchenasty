@@ -131,7 +131,7 @@
     "pickup": "Abholung",
     "deliveryAddress": "Lieferadresse",
     "addressLine1": "Adresszeile 1",
-    "addressLine2": "Adresszeile 2 (optional)",
+    "addressLine2": "Zwischen Straßen *",
     "city": "Stadt",
     "state": "Bundesland",
     "zipCode": "Postleitzahl",
@@ -174,7 +174,9 @@
     "selectZoneError": "Bitte wählen Sie eine Lieferzone",
     "minOrderError": "Mindestbestellung für",
     "minOrderDelivery": "mindestbestellung lieferung",
-    "couponAppliedSuccess": "Gutschein angewendet!"
+    "couponAppliedSuccess": "Gutschein angewendet!",
+    "addressLine2Required": "Zwischen Straßen ist erforderlich",
+    "between": "Entre"
   },
   "orderConfirmation": {
     "title": "Bestellung aufgegeben!",
@@ -209,8 +211,9 @@
     "cash": "Bargeld",
     "stripe": "Karte",
     "paypal": "PayPal",
-    "transfer": "Überweisung",
-    "viewOrder": "Bestellung Ansehen"
+"transfer": "Überweisung",
+    "viewOrder": "Bestellung Ansehen",
+    "between": "Zwischen"
   },
   "orders": {
     "title": "Bestellverlauf",

@@ -26,6 +26,7 @@ interface OrderData {
   freeDelivery?: boolean;
   address?: {
     line1: string;
+    line2: string;
     city: string;
     state: string;
     zip: string;
@@ -102,7 +103,7 @@ export function buildWhatsAppMessage(
   }
 
   if (orderType === 'delivery' && order.address) {
-    lines.push(`\u{1F4CD} *${t('whatsapp.address')}:* ${order.address.line1}, ${order.address.city}, ${order.address.state} ${order.address.zip}`);
+    lines.push(`\u{1F4CD} *${t('whatsapp.address')}:* ${order.address.line1}, ${t('whatsapp.between')}: ${order.address.line2}, ${order.address.city}, ${order.address.state} ${order.address.zip}`);
   }
 
   lines.push('');
