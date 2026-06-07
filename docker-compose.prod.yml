@@ -1,0 +1,82 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: kitchenasty-db
+    environment:
+      POSTGRES_USER: kitchenasty
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: kitchenasty
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kitchenasty"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  server:
+    build:
+      context: .
+      dockerfile: packages/server/Dockerfile
+    container_name: kitchenasty-server
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      DATABASE_URL: postgresql://kitchenasty:${DB_PASSWORD}@postgres:5432/kitchenasty
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: 7d
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      BASE_URL: https://${API_DOMAIN}
+      STOREFRONT_URL: https://${STOREFRONT_DOMAIN}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      EMAIL_FROM: ${EMAIL_FROM}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      FACEBOOK_APP_ID: ${FACEBOOK_APP_ID}
+      FACEBOOK_APP_SECRET: ${FACEBOOK_APP_SECRET}
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - uploads:/app/uploads
+    restart: unless-stopped
+
+  admin:
+    build:
+      context: .
+      dockerfile: packages/admin/Dockerfile
+    container_name: kitchenasty-admin
+    depends_on:
+      - server
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5173:80"
+
+  storefront:
+    build:
+      context: .
+      dockerfile: packages/storefront/Dockerfile
+    container_name: kitchenasty-storefront
+    depends_on:
+      - server
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5174:80"
+
+volumes:
+  pgdata:
+  uploads:
+
+networks:
+  default:
+    name: kitchenasty
