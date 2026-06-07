@@ -133,6 +133,33 @@ showToast(messageKey, options?, type?, action?, duration?)
 - Only prompts on `OrderConfirmation` page (not globally)
 - Browser support: Desktop Chrome/Firefox ✅, Android Chrome ⚠️, iOS Safari ❌
 
+## VPS Deployment
+
+Production deployment scripts are in `deploy/vps-scripts/`. Copy this folder to your VPS and run `./setup-vps.sh`.
+
+```bash
+scp -r deploy/vps-scripts user@vps:/path/to/deploy/
+ssh user@vps
+cd /path/to/deploy && ./setup-vps.sh
+```
+
+### Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `setup-vps.sh` | Main menu (run individually or all at once) |
+| `01-base-system.sh` | Create deploy user, Docker, firewall, unattended upgrades |
+| `02-clone-repo.sh` | Generate SSH key, clone repo, create `.env` from template |
+| `03-docker-compose.sh` | Generate `docker-compose.prod.yml`, build images |
+| `04-reverse-proxy.sh` | Install Caddy, configure SSL |
+| `05-finalize.sh` | Migrations, seed, health check |
+
+### Configuration
+
+Copy `deploy/vps-scripts/.env.template` to `deploy/vps-scripts/.env` and set:
+- `ADMIN_DOMAIN`, `STOREFRONT_DOMAIN`, `API_DOMAIN` — your domain names
+- `POSTGRES_PASSWORD` — database password (auto-generates JWT_SECRET)
+
 ## Restrictions
 
 - **Do not update or modify the `packages/mobile` project.** The mobile app is managed separately and should not be touched.

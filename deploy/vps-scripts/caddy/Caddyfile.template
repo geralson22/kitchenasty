@@ -1,0 +1,14 @@
+# Admin Dashboard
+{$ADMIN_DOMAIN} {
+    reverse_proxy localhost:5173
+}
+
+# Customer Storefront
+{$STOREFRONT_DOMAIN} {
+    reverse_proxy localhost:5174
+}
+
+# API Server
+{$API_DOMAIN} {
+    reverse_proxy localhost:3000
+}
