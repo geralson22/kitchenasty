@@ -63,8 +63,8 @@ export function createApp() {
   // Rate limiting
   if (process.env.NODE_ENV !== 'test') {
     const limiter = rateLimit({
-      windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 100, // limit each IP to 100 requests per windowMs
+      windowMs: (parseInt(process.env.RATE_LIMIT_WINDOW_MS || '300000', 10)), // 5 minutes default
+      max: parseInt(process.env.RATE_LIMIT_MAX || '2000', 10), // 2000 requests per window default
       standardHeaders: true,
       legacyHeaders: false,
       message: { success: false, error: 'Too many requests, please try again later.' },
