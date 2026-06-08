@@ -110,7 +110,14 @@
     "quantity": "Quantity",
     "selectOption": "Select {{name}}",
     "itemAdded": "Added to cart!",
-    "allergens": "Allergens"
+    "allergens": "Allergens",
+    "selectAtLeast": "{{name}}: select at least {{count}}",
+    "selectAtMost": "{{name}}: select at most {{count}}",
+    "selectExact": "Select {{count}}",
+    "selectRange": "Select {{min}}-{{max}}",
+    "selectUpTo": "Select up to {{count}}",
+    "failedToLoadItem": "Failed to load item",
+    "closeError": "Close"
   },
   "cart": {
     "title": "Your Cart",

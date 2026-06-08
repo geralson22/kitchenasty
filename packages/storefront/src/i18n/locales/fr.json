@@ -110,7 +110,14 @@
     "quantity": "Quantité",
     "selectOption": "Choisir {{name}}",
     "itemAdded": "Ajouté au panier !",
-    "allergens": "Allergènes"
+    "allergens": "Allergènes",
+    "selectAtLeast": "{{name}}: sélectionnez au moins {{count}}",
+    "selectAtMost": "{{name}}: sélectionnez au maximum {{count}}",
+    "selectExact": "Sélectionnez {{count}}",
+    "selectRange": "Sélectionnez {{min}}-{{max}}",
+    "selectUpTo": "Sélectionnez jusqu'à {{count}}",
+    "failedToLoadItem": "Échec du chargement de l'article",
+    "closeError": "Fermer"
   },
   "cart": {
     "title": "Votre Panier",

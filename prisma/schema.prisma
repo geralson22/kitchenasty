@@ -274,8 +274,6 @@ model MenuOptionValue {
   isDefault       Boolean    @default(false)
   sortOrder       Int        @default(0)
 
-  orderItemOptions OrderItemOption[]
-
   @@map("menu_option_values")
 }
 
@@ -415,14 +413,13 @@ model OrderItem {
 }
 
 model OrderItemOption {
-  id                String          @id @default(cuid())
+  id                String     @id @default(cuid())
   orderItemId       String
-  orderItem         OrderItem       @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
-  menuOptionValueId String
-  menuOptionValue   MenuOptionValue @relation(fields: [menuOptionValueId], references: [id])
-  name              String // snapshot
-  value             String // snapshot
-  priceModifier     Float
+  orderItem         OrderItem  @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  menuOptionValueId String?    // kept for reference only - no FK constraint, data is snapshotted below
+  name              String     // snapshot
+  value             String     // snapshot
+  priceModifier     Float      // snapshot
 
   @@map("order_item_options")
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCart } from '../context/CartContext.js';
+import { useCart, useToast } from '../context/CartContext.js';
 
 interface OptionValue {
   id: string;
@@ -46,6 +46,7 @@ interface Props {
 export default function MenuItemModal({ itemId, onClose }: Props) {
   const { t } = useTranslation();
   const { addItem } = useCart();
+  const { showToast } = useToast();
   const [item, setItem] = useState<MenuItemDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -73,7 +74,7 @@ export default function MenuItemModal({ itemId, onClose }: Props) {
         }
         setSelections(defaults);
       })
-      .catch((err) => setError(err.message))
+      .catch((err) => setError(err.message || t('menu.failedToLoadItem')))
       .finally(() => setLoading(false));
   }, [itemId]);
 
@@ -112,6 +113,23 @@ export default function MenuItemModal({ itemId, onClose }: Props) {
 
   function handleAddToCart() {
     if (!item) return;
+
+    for (const opt of item.options) {
+      const selected = selections[opt.id] || [];
+      const count = selected.length;
+      const min = opt.minSelect ?? (opt.isRequired ? 1 : 0);
+      const max = opt.maxSelect ?? 1;
+
+      if (count < min) {
+        showToast(t('menu.selectAtLeast', { name: opt.name, count: min }), {}, 'error');
+        return;
+      }
+      if (count > max) {
+        showToast(t('menu.selectAtMost', { name: opt.name, count: max }), {}, 'error');
+        return;
+      }
+    }
+
     const cartOptions = item.options.flatMap((opt) => {
       const selected = selections[opt.id] || [];
       return opt.values
@@ -167,7 +185,7 @@ export default function MenuItemModal({ itemId, onClose }: Props) {
           <div className="p-6">
             <div className="bg-red-50 text-red-700 p-4 rounded-lg">{error}</div>
             <button onClick={onClose} className="mt-4 text-sm text-gray-500 hover:text-gray-700">
-              Close
+              {t('menu.closeError')}
             </button>
           </div>
         )}
@@ -188,7 +206,7 @@ export default function MenuItemModal({ itemId, onClose }: Props) {
               <button
                 onClick={onClose}
                 className="absolute top-3 right-3 bg-white/80 hover:bg-white rounded-full p-1.5 transition-colors"
-                aria-label="Close"
+                aria-label={t('menu.closeError')}
               >
                 <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -236,6 +254,17 @@ export default function MenuItemModal({ itemId, onClose }: Props) {
                         <h3 className="text-sm font-semibold text-gray-900">{opt.name}</h3>
                         {opt.isRequired && (
                           <span className="text-xs text-red-500 font-medium">{t('common.required')}</span>
+                        )}
+                        {(opt.displayType === 'CHECKBOX' || opt.displayType === 'QUANTITY') && (
+                          <span className="text-xs text-gray-400">
+                            {opt.minSelect > 0 && opt.maxSelect > 0
+                              ? opt.minSelect === opt.maxSelect
+                                ? t('menu.selectExact', { count: opt.minSelect })
+                                : t('menu.selectRange', { min: opt.minSelect, max: opt.maxSelect })
+                              : opt.maxSelect > 1
+                                ? t('menu.selectUpTo', { count: opt.maxSelect })
+                                : ''}
+                          </span>
                         )}
                       </div>
 

@@ -480,6 +480,30 @@ export default function MenuItemForm() {
                       <span className="text-xs text-gray-700">Required</span>
                     </label>
                   </div>
+                  {(opt.displayType === 'CHECKBOX' || opt.displayType === 'QUANTITY') && (
+                    <div className="flex items-center gap-3 mt-4">
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs text-gray-500">Min:</span>
+                        <input
+                          type="number"
+                          min={0}
+                          value={opt.minSelect ?? 0}
+                          onChange={(e) => updateOption(optIdx, 'minSelect', parseInt(e.target.value) || 0)}
+                          className="w-14 border border-gray-300 rounded px-2 py-1 text-sm"
+                        />
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs text-gray-500">Max:</span>
+                        <input
+                          type="number"
+                          min={1}
+                          value={opt.maxSelect ?? 1}
+                          onChange={(e) => updateOption(optIdx, 'maxSelect', parseInt(e.target.value) || 1)}
+                          className="w-14 border border-gray-300 rounded px-2 py-1 text-sm"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Option Values */}
