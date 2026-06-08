@@ -40,29 +40,7 @@ function ClassicFooter() {
             </ul>
           </div>
 
-          {/* Account */}
-          <div>
-            <h3 className="text-white font-semibold mb-3">{t('footer.account')}</h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/login" className="hover:text-white transition-colors">{t('nav.login')}</Link></li>
-              <li><Link to="/register" className="hover:text-white transition-colors">{t('footer.createAccount')}</Link></li>
-              <li><Link to="/account" className="hover:text-white transition-colors">{t('nav.myAccount')}</Link></li>
-            </ul>
-
-            <h3 className="text-white font-semibold mb-3 mt-6">{t('footer.legal')}</h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/privacy-policy" className="hover:text-white transition-colors">{t('footer.privacyPolicy')}</Link></li>
-              <li><Link to="/impressum" className="hover:text-white transition-colors">{t('footer.impressum')}</Link></li>
-              <li>
-                <button
-                  onClick={() => window.dispatchEvent(new Event('open-cookie-settings'))}
-                  className="hover:text-white transition-colors"
-                >
-                  {t('footer.cookieSettings')}
-                </button>
-              </li>
-            </ul>
-          </div>
+          
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">

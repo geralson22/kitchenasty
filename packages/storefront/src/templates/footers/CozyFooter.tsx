@@ -49,27 +49,7 @@ export default function CozyFooter() {
             </ul>
           </div>
 
-          {/* Account */}
-          <div>
-            <h3 className="text-amber-900 font-semibold mb-4">{t('footer.account')}</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link to="/login" className="hover:text-amber-950 transition-colors bg-amber-100 rounded-full px-3 py-1 inline-block">
-                  {t('nav.login')}
-                </Link>
-              </li>
-              <li>
-                <Link to="/register" className="hover:text-amber-950 transition-colors bg-amber-100 rounded-full px-3 py-1 inline-block">
-                  {t('footer.createAccount')}
-                </Link>
-              </li>
-              <li>
-                <Link to="/account" className="hover:text-amber-950 transition-colors bg-amber-100 rounded-full px-3 py-1 inline-block">
-                  {t('nav.myAccount')}
-                </Link>
-              </li>
-            </ul>
-          </div>
+          
 
           {/* Legal */}
           <div>

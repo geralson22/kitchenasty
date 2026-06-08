@@ -41,15 +41,7 @@ export default function SleekFooter() {
             </ul>
           </div>
 
-          {/* Account */}
-          <div>
-            <h3 className="text-gray-300 font-medium mb-4 text-sm">{t('footer.account')}</h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/login" className="hover:text-cyan-400 transition-colors">{t('nav.login')}</Link></li>
-              <li><Link to="/register" className="hover:text-cyan-400 transition-colors">{t('footer.createAccount')}</Link></li>
-              <li><Link to="/account" className="hover:text-cyan-400 transition-colors">{t('nav.myAccount')}</Link></li>
-            </ul>
-          </div>
+          
 
           {/* Legal */}
           <div>

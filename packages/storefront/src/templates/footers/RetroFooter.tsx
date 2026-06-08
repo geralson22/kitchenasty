@@ -45,17 +45,7 @@ export default function RetroFooter() {
             </ul>
           </div>
 
-          {/* Account */}
-          <div>
-            <h3 className="text-amber-200 font-bold uppercase tracking-widest text-xs mb-5 border-b border-amber-800 pb-2">
-              {t('footer.account')}
-            </h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/login" className="hover:text-amber-100 transition-colors">{t('nav.login')}</Link></li>
-              <li><Link to="/register" className="hover:text-amber-100 transition-colors">{t('footer.createAccount')}</Link></li>
-              <li><Link to="/account" className="hover:text-amber-100 transition-colors">{t('nav.myAccount')}</Link></li>
-            </ul>
-          </div>
+          
 
           {/* Legal */}
           <div>

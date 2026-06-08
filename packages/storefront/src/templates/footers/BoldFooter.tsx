@@ -37,15 +37,7 @@ export default function BoldFooter() {
             </ul>
           </div>
 
-          {/* Account */}
-          <div>
-            <h3 className="text-white font-black text-lg uppercase tracking-wider mb-5">{t('footer.account')}</h3>
-            <ul className="space-y-3 text-base font-semibold">
-              <li><Link to="/login" className="hover:text-white transition-colors">{t('nav.login')}</Link></li>
-              <li><Link to="/register" className="hover:text-white transition-colors">{t('footer.createAccount')}</Link></li>
-              <li><Link to="/account" className="hover:text-white transition-colors">{t('nav.myAccount')}</Link></li>
-            </ul>
-          </div>
+          
 
           {/* Legal */}
           <div>

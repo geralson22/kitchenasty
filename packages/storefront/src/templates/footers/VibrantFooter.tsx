@@ -37,15 +37,7 @@ export default function VibrantFooter() {
             </ul>
           </div>
 
-          {/* Account */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">{t('footer.account')}</h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/login" className="hover:text-white transition-colors">{t('nav.login')}</Link></li>
-              <li><Link to="/register" className="hover:text-white transition-colors">{t('footer.createAccount')}</Link></li>
-              <li><Link to="/account" className="hover:text-white transition-colors">{t('nav.myAccount')}</Link></li>
-            </ul>
-          </div>
+          
 
           {/* Legal */}
           <div>

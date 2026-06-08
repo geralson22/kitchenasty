@@ -40,15 +40,7 @@ export default function ModernFooter() {
             </ul>
           </div>
 
-          {/* Account */}
-          <div>
-            <h3 className="text-white font-medium mb-4 text-sm uppercase tracking-wider">{t('footer.account')}</h3>
-            <ul className="space-y-3 text-sm">
-              <li><Link to="/login" className="hover:text-primary-400 transition-colors">{t('nav.login')}</Link></li>
-              <li><Link to="/register" className="hover:text-primary-400 transition-colors">{t('footer.createAccount')}</Link></li>
-              <li><Link to="/account" className="hover:text-primary-400 transition-colors">{t('nav.myAccount')}</Link></li>
-            </ul>
-          </div>
+          
 
           {/* Legal */}
           <div>

@@ -39,15 +39,7 @@ export default function ElegantFooter() {
             </ul>
           </div>
 
-          {/* Account */}
-          <div>
-            <h3 className="text-gray-800 font-serif text-base mb-4 tracking-wide">{t('footer.account')}</h3>
-            <ul className="space-y-2">
-              <li><Link to="/login" className="hover:text-gray-900 transition-colors">{t('nav.login')}</Link></li>
-              <li><Link to="/register" className="hover:text-gray-900 transition-colors">{t('footer.createAccount')}</Link></li>
-              <li><Link to="/account" className="hover:text-gray-900 transition-colors">{t('nav.myAccount')}</Link></li>
-            </ul>
-          </div>
+          
 
           {/* Legal */}
           <div>
