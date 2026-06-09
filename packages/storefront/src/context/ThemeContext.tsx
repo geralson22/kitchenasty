@@ -8,6 +8,7 @@ interface HeroSection {
   ctaSecondaryText?: string;
   ctaSecondaryLink?: string;
   backgroundImage?: string;
+  whatsappNumber?: string;
 }
 
 interface FeatureItem {

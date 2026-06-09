@@ -122,4 +122,10 @@ export function getWhatsAppUrl(
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
+export function getWhatsAppReservationUrl(t: TranslateFunction, whatsappNumber?: string): string {
+  if (!whatsappNumber) return '';
+  const message = `Hola! 📱 Vengo de la web y tengo una pregunta. 📝`;
+  return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+}
+
 export { WHATSAPP_NUMBER };

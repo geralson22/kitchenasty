@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
+import { getWhatsAppReservationUrl } from '../../utils/whatsapp.js';
 
 interface HeroProps {
-  hero: { title?: string; subtitle?: string; ctaPrimaryText?: string; ctaPrimaryLink?: string; ctaSecondaryText?: string; ctaSecondaryLink?: string; backgroundImage?: string } | null;
+  hero: { title?: string; subtitle?: string; ctaPrimaryText?: string; ctaPrimaryLink?: string; ctaSecondaryText?: string; ctaSecondaryLink?: string; backgroundImage?: string; whatsappNumber?: string } | null;
   t: (key: string) => string;
 }
 
@@ -45,18 +46,31 @@ export default function RusticHero({ hero, t }: HeroProps) {
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             to={hero?.ctaPrimaryLink || '/menu'}
-            className="bg-amber-700 hover:bg-amber-800 dark:bg-amber-600 dark:hover:bg-amber-700 text-white px-8 py-3.5 rounded-lg font-semibold transition-colors shadow-md"
+            className="bg-amber-700 hover:bg-amber-800 text-white px-8 py-3.5 rounded-lg font-semibold transition-colors shadow-md"
             style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
           >
             {hero?.ctaPrimaryText || t('home.viewMenu')}
           </Link>
-          <Link
-            to={hero?.ctaSecondaryLink || '/locations'}
-            className={`px-8 py-3.5 rounded-lg font-semibold transition-colors border-2 ${hero?.backgroundImage ? 'border-amber-200/50 text-amber-100 hover:bg-amber-200/10' : 'border-stone-400 dark:border-stone-600 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-800'}`}
-            style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-          >
-            {hero?.ctaSecondaryText || t('home.findLocation')}
-          </Link>
+          {hero?.ctaSecondaryText && hero?.ctaSecondaryLink && (
+            <Link
+              to={hero.ctaSecondaryLink}
+              className="bg-amber-700 text-white px-8 py-3.5 rounded-lg font-semibold hover:bg-amber-800 transition-colors"
+              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+            >
+              {hero.ctaSecondaryText}
+            </Link>
+          )}
+          {hero?.whatsappNumber && (
+            <a
+              href={getWhatsAppReservationUrl(t, hero.whatsappNumber)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-500 hover:bg-green-600 text-white px-8 py-3.5 rounded-lg font-semibold transition-colors shadow-md"
+              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+            >
+              WhatsApp
+            </a>
+          )}
         </div>
 
         {/* Bottom rustic divider */}

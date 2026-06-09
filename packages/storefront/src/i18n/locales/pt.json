@@ -28,6 +28,7 @@
   "home": {
     "heroTitle": "Peça Comida Deliciosa Online",
     "heroDescription": "Navegue pelo nosso cardápio, faça seu pedido para entrega ou retirada e aproveite refeições frescas e preparadas na hora pelo KitchenAsty.",
+    "welcome": "Bem-vindo",
     "viewMenu": "Ver Cardápio",
     "findLocation": "Encontrar Unidade",
     "fastDelivery": "Entrega Rápida",
@@ -271,6 +272,7 @@
     "noSlots": "Nenhum horário disponível para esta data.",
     "specialRequests": "Pedidos Especiais (opcional)",
     "bookNow": "Reservar Mesa",
+    "bookViaWhatsapp": "Reservar pelo WhatsApp",
     "booking": "Reservando...",
     "loginRequired": "Faça login para fazer uma reserva.",
     "myReservations": "Minhas Reservas",

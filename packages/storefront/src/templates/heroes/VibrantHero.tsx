@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
+import { getWhatsAppReservationUrl } from '../../utils/whatsapp.js';
 
 interface HeroProps {
-  hero: { title?: string; subtitle?: string; ctaPrimaryText?: string; ctaPrimaryLink?: string; ctaSecondaryText?: string; ctaSecondaryLink?: string; backgroundImage?: string } | null;
+  hero: { title?: string; subtitle?: string; ctaPrimaryText?: string; ctaPrimaryLink?: string; ctaSecondaryText?: string; ctaSecondaryLink?: string; backgroundImage?: string; whatsappNumber?: string } | null;
   t: (key: string) => string;
 }
 
@@ -42,16 +43,28 @@ export default function VibrantHero({ hero, t }: HeroProps) {
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             to={hero?.ctaPrimaryLink || '/menu'}
-            className="bg-white text-primary-700 px-8 py-4 rounded-full font-bold text-lg hover:bg-yellow-100 transition-colors shadow-xl shadow-black/20"
+            className="bg-primary-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-primary-700 transition-colors shadow-xl shadow-black/20"
           >
             {hero?.ctaPrimaryText || t('home.viewMenu')}
           </Link>
-          <Link
-            to={hero?.ctaSecondaryLink || '/locations'}
-            className="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white/20 transition-colors"
-          >
-            {hero?.ctaSecondaryText || t('home.findLocation')}
-          </Link>
+          {hero?.ctaSecondaryText && hero?.ctaSecondaryLink && (
+            <Link
+              to={hero.ctaSecondaryLink}
+              className="bg-primary-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-primary-700 transition-colors"
+            >
+              {hero.ctaSecondaryText}
+            </Link>
+          )}
+          {hero?.whatsappNumber && (
+            <a
+              href={getWhatsAppReservationUrl(t, hero.whatsappNumber)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-500 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-green-600 transition-colors shadow-xl shadow-black/20"
+            >
+              WhatsApp
+            </a>
+          )}
         </div>
       </div>
     </section>

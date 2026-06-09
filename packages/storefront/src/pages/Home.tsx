@@ -5,6 +5,7 @@ import { useTheme } from '../context/ThemeContext.js';
 import { heroVariants } from '../templates/heroes/index.js';
 import { featureVariants } from '../templates/features/index.js';
 import { ctaVariants } from '../templates/ctas/index.js';
+import { getWhatsAppReservationUrl } from '../utils/whatsapp.js';
 import type { TemplateId } from '../templates/index.js';
 
 export default function Home() {
@@ -62,6 +63,7 @@ interface HeroSection {
   ctaSecondaryText?: string;
   ctaSecondaryLink?: string;
   backgroundImage?: string;
+  whatsappNumber?: string;
 }
 
 function ClassicHero({ hero, t }: { hero: HeroSection | null; t: (k: string) => string }) {
@@ -85,16 +87,28 @@ function ClassicHero({ hero, t }: { hero: HeroSection | null; t: (k: string) => 
           <div className="flex flex-wrap gap-4">
             <Link
               to={hero?.ctaPrimaryLink || '/menu'}
-              className="bg-white text-primary-700 px-6 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors"
+              className="bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors"
             >
               {hero?.ctaPrimaryText || t('home.viewMenu')}
             </Link>
-            <Link
-              to={hero?.ctaSecondaryLink || '/locations'}
-              className="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors"
-            >
-              {hero?.ctaSecondaryText || t('home.findLocation')}
-            </Link>
+            {hero?.ctaSecondaryText && hero?.ctaSecondaryLink && (
+              <Link
+                to={hero.ctaSecondaryLink}
+                className="bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors"
+              >
+                {hero.ctaSecondaryText}
+              </Link>
+            )}
+            {hero?.whatsappNumber && (
+              <a
+                href={getWhatsAppReservationUrl(t, hero.whatsappNumber)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors"
+              >
+                WhatsApp
+              </a>
+            )}
           </div>
         </div>
       </div>

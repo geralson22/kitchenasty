@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
+import { getWhatsAppReservationUrl } from '../../utils/whatsapp.js';
 
 interface HeroProps {
-  hero: { title?: string; subtitle?: string; ctaPrimaryText?: string; ctaPrimaryLink?: string; ctaSecondaryText?: string; ctaSecondaryLink?: string; backgroundImage?: string } | null;
+  hero: { title?: string; subtitle?: string; ctaPrimaryText?: string; ctaPrimaryLink?: string; ctaSecondaryText?: string; ctaSecondaryLink?: string; backgroundImage?: string; whatsappNumber?: string } | null;
   t: (key: string) => string;
 }
 
@@ -36,12 +37,32 @@ export default function ModernHero({ hero, t }: HeroProps) {
               >
                 {hero?.ctaPrimaryText || t('home.viewMenu')}
               </Link>
-              <Link
-                to={hero?.ctaSecondaryLink || '/locations'}
-                className="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-8 py-3.5 rounded-2xl font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shadow-md border border-gray-200 dark:border-gray-700"
-              >
-                {hero?.ctaSecondaryText || t('home.findLocation')}
-              </Link>
+              {hero?.ctaSecondaryText && hero?.ctaSecondaryLink && (
+                <Link
+                  to={hero.ctaSecondaryLink}
+                  className="bg-primary-700 text-white px-8 py-3.5 rounded-2xl font-semibold hover:bg-primary-800 transition-colors shadow-md"
+                >
+                  {hero.ctaSecondaryText}
+                </Link>
+              )}
+              {hero?.ctaSecondaryText && hero?.ctaSecondaryLink && (
+                <Link
+                  to={hero.ctaSecondaryLink}
+                  className="bg-primary-600 text-white px-8 py-3.5 rounded-2xl font-semibold hover:bg-primary-700 transition-colors shadow-md"
+                >
+                  {hero.ctaSecondaryText}
+                </Link>
+              )}
+              {hero?.whatsappNumber && (
+                <a
+                  href={getWhatsAppReservationUrl(t, hero.whatsappNumber)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-green-500 text-white px-8 py-3.5 rounded-2xl font-semibold hover:bg-green-600 transition-colors shadow-lg shadow-green-500/25"
+                >
+                  WhatsApp
+                </a>
+              )}
             </div>
           </div>
 

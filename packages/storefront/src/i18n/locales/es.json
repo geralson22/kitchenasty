@@ -28,6 +28,7 @@
   "home": {
     "heroTitle": "Pide Comida Deliciosa en Línea",
     "heroDescription": "Explora nuestro menú, haz tu pedido para entrega o delivery, y disfruta de comidas frescas y preparadas al momento de KitchenAsty.",
+    "welcome": "Bienvenido",
     "viewMenu": "Ver Menú",
     "findLocation": "Encontrar Ubicación",
     "fastDelivery": "Entrega Rápida",
@@ -275,6 +276,7 @@
     "noSlots": "No hay horarios disponibles para esta fecha.",
     "specialRequests": "Solicitudes Especiales (opcional)",
     "bookNow": "Reservar Mesa",
+    "bookViaWhatsapp": "Reservar por WhatsApp",
     "booking": "Reservando...",
     "loginRequired": "Por favor inicia sesión para hacer una reserva.",
     "myReservations": "Mis Reservas",

@@ -28,6 +28,7 @@
   "home": {
     "heroTitle": "Commandez de Bons Plats en Ligne",
     "heroDescription": "Parcourez notre menu, passez votre commande en livraison ou à emporter, et savourez des plats frais préparés à la demande chez KitchenAsty.",
+    "welcome": "Bienvenue",
     "viewMenu": "Voir le Menu",
     "findLocation": "Trouver un Restaurant",
     "fastDelivery": "Livraison Rapide",
@@ -271,6 +272,7 @@
     "noSlots": "Aucun créneau disponible pour cette date.",
     "specialRequests": "Demandes Spéciales (optionnel)",
     "bookNow": "Réserver",
+    "bookViaWhatsapp": "Réserver via WhatsApp",
     "booking": "Réservation en cours...",
     "loginRequired": "Veuillez vous connecter pour faire une réservation.",
     "myReservations": "Mes Réservations",

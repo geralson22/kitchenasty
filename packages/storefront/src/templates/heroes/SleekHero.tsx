@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
+import { getWhatsAppReservationUrl } from '../../utils/whatsapp.js';
 
 interface HeroProps {
-  hero: { title?: string; subtitle?: string; ctaPrimaryText?: string; ctaPrimaryLink?: string; ctaSecondaryText?: string; ctaSecondaryLink?: string; backgroundImage?: string } | null;
+  hero: { title?: string; subtitle?: string; ctaPrimaryText?: string; ctaPrimaryLink?: string; ctaSecondaryText?: string; ctaSecondaryLink?: string; backgroundImage?: string; whatsappNumber?: string } | null;
   t: (key: string) => string;
 }
 
@@ -44,17 +45,28 @@ export default function SleekHero({ hero, t }: HeroProps) {
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             to={hero?.ctaPrimaryLink || '/menu'}
-            className="relative group bg-gradient-to-r from-cyan-500 to-primary-500 text-white px-8 py-3.5 rounded-lg font-semibold transition-all duration-300 shadow-lg shadow-cyan-500/25 hover:shadow-xl hover:shadow-cyan-500/30"
+            className="bg-primary-600 text-white px-8 py-3.5 rounded-lg font-semibold hover:bg-primary-700 transition-colors shadow-lg shadow-primary-500/25"
           >
-            <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-cyan-500 to-primary-500 opacity-0 group-hover:opacity-100 blur transition-opacity" />
-            <span className="relative">{hero?.ctaPrimaryText || t('home.viewMenu')}</span>
+            {hero?.ctaPrimaryText || t('home.viewMenu')}
           </Link>
-          <Link
-            to={hero?.ctaSecondaryLink || '/locations'}
-            className="border border-gray-700 text-gray-300 px-8 py-3.5 rounded-lg font-semibold hover:border-gray-500 hover:text-white transition-colors backdrop-blur-sm"
-          >
-            {hero?.ctaSecondaryText || t('home.findLocation')}
-          </Link>
+          {hero?.ctaSecondaryText && hero?.ctaSecondaryLink && (
+            <Link
+              to={hero.ctaSecondaryLink}
+              className="bg-primary-600 text-white px-8 py-3.5 rounded-lg font-semibold hover:bg-primary-700 transition-colors shadow-lg shadow-primary-500/25"
+            >
+              {hero.ctaSecondaryText}
+            </Link>
+          )}
+          {hero?.whatsappNumber && (
+            <a
+              href={getWhatsAppReservationUrl(t, hero.whatsappNumber)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-500 text-white px-8 py-3.5 rounded-lg font-semibold hover:bg-green-600 transition-colors shadow-lg shadow-green-500/25"
+            >
+              WhatsApp
+            </a>
+          )}
         </div>
       </div>
     </section>

@@ -28,6 +28,7 @@
   "home": {
     "heroTitle": "Leckeres Essen Online Bestellen",
     "heroDescription": "Stöbern Sie in unserer Speisekarte, bestellen Sie zur Lieferung oder Abholung und genießen Sie frisch zubereitete Gerichte von KitchenAsty.",
+    "welcome": "Willkommen",
     "viewMenu": "Speisekarte Ansehen",
     "findLocation": "Standort Finden",
     "fastDelivery": "Schnelle Lieferung",
@@ -271,6 +272,7 @@
     "noSlots": "Keine verfügbaren Zeiten für dieses Datum.",
     "specialRequests": "Besondere Wünsche (optional)",
     "bookNow": "Jetzt Reservieren",
+    "bookViaWhatsapp": "Über WhatsApp reservieren",
     "booking": "Reservierung läuft...",
     "loginRequired": "Bitte melden Sie sich an, um eine Reservierung vorzunehmen.",
     "myReservations": "Meine Reservierungen",

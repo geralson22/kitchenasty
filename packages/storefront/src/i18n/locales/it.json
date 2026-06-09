@@ -271,6 +271,7 @@
     "noSlots": "Nessun orario disponibile per questa data.",
     "specialRequests": "Richieste Speciali (opzionale)",
     "bookNow": "Prenota Tavolo",
+    "bookViaWhatsapp": "Prenota via WhatsApp",
     "booking": "Prenotazione in corso...",
     "loginRequired": "Accedi per effettuare una prenotazione.",
     "myReservations": "Le Mie Prenotazioni",

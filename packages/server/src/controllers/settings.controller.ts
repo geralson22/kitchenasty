@@ -19,6 +19,7 @@ const updateSettingsSchema = z.object({
     ctaSecondaryText: z.string().optional(),
     ctaSecondaryLink: z.string().optional(),
     backgroundImage: z.string().optional(),
+    whatsappNumber: z.string().optional(),
   }).optional(),
   featuresSection: z.array(z.object({
     icon: z.string(),

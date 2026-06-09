@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
+import { getWhatsAppReservationUrl } from '../../utils/whatsapp.js';
 
 interface HeroProps {
-  hero: { title?: string; subtitle?: string; ctaPrimaryText?: string; ctaPrimaryLink?: string; ctaSecondaryText?: string; ctaSecondaryLink?: string; backgroundImage?: string } | null;
+  hero: { title?: string; subtitle?: string; ctaPrimaryText?: string; ctaPrimaryLink?: string; ctaSecondaryText?: string; ctaSecondaryLink?: string; backgroundImage?: string; whatsappNumber?: string } | null;
   t: (key: string) => string;
 }
 
@@ -52,18 +53,31 @@ export default function RetroHero({ hero, t }: HeroProps) {
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             to={hero?.ctaPrimaryLink || '/menu'}
-            className="bg-amber-700 hover:bg-amber-800 dark:bg-amber-600 dark:hover:bg-amber-700 text-amber-50 px-8 py-3.5 rounded-sm font-bold uppercase tracking-widest text-sm border-2 border-amber-800 dark:border-amber-500 transition-colors shadow-md"
+            className="bg-amber-700 hover:bg-amber-800 dark:bg-amber-600 dark:hover:bg-amber-700 text-white px-8 py-3.5 rounded-sm font-bold uppercase tracking-widest text-sm transition-colors shadow-md"
             style={{ fontFamily: 'Georgia, serif' }}
           >
             {hero?.ctaPrimaryText || t('home.viewMenu')}
           </Link>
-          <Link
-            to={hero?.ctaSecondaryLink || '/locations'}
-            className="border-2 border-amber-700 dark:border-amber-500 text-amber-800 dark:text-amber-300 px-8 py-3.5 rounded-sm font-bold uppercase tracking-widest text-sm hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
-            style={{ fontFamily: 'Georgia, serif' }}
-          >
-            {hero?.ctaSecondaryText || t('home.findLocation')}
-          </Link>
+          {hero?.ctaSecondaryText && hero?.ctaSecondaryLink && (
+            <Link
+              to={hero.ctaSecondaryLink}
+              className="bg-amber-700 dark:bg-amber-600 text-white px-8 py-3.5 rounded-sm font-bold uppercase tracking-widest text-sm hover:bg-amber-800 dark:hover:bg-amber-700 transition-colors"
+              style={{ fontFamily: 'Georgia, serif' }}
+            >
+              {hero.ctaSecondaryText}
+            </Link>
+          )}
+          {hero?.whatsappNumber && (
+            <a
+              href={getWhatsAppReservationUrl(t, hero.whatsappNumber)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-500 hover:bg-green-600 text-white px-8 py-3.5 rounded-sm font-bold uppercase tracking-widest text-sm border-2 border-green-700 transition-colors shadow-md"
+              style={{ fontFamily: 'Georgia, serif' }}
+            >
+              WhatsApp
+            </a>
+          )}
         </div>
 
         {/* Bottom vintage decoration */}

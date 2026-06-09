@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
+import { getWhatsAppReservationUrl } from '../../utils/whatsapp.js';
 
 interface HeroProps {
-  hero: { title?: string; subtitle?: string; ctaPrimaryText?: string; ctaPrimaryLink?: string; ctaSecondaryText?: string; ctaSecondaryLink?: string; backgroundImage?: string } | null;
+  hero: { title?: string; subtitle?: string; ctaPrimaryText?: string; ctaPrimaryLink?: string; ctaSecondaryText?: string; ctaSecondaryLink?: string; backgroundImage?: string; whatsappNumber?: string } | null;
   t: (key: string) => string;
 }
 
@@ -26,7 +27,7 @@ export default function ElegantHero({ hero, t }: HeroProps) {
         {/* Small decorative element */}
         <div className="flex items-center justify-center gap-3 mb-6">
           <span className="block w-12 h-px bg-amber-300/70" />
-          <span className="text-amber-300 text-xs tracking-[0.3em] uppercase font-light">Welcome</span>
+          <span className="text-amber-300 text-xs tracking-[0.3em] uppercase font-light">{t('home.welcome')}</span>
           <span className="block w-12 h-px bg-amber-300/70" />
         </div>
 
@@ -41,16 +42,28 @@ export default function ElegantHero({ hero, t }: HeroProps) {
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             to={hero?.ctaPrimaryLink || '/menu'}
-            className="border border-amber-300 text-amber-100 px-8 py-3 text-sm tracking-widest uppercase hover:bg-amber-300 hover:text-gray-900 transition-all duration-300"
+            className="bg-amber-600 text-white px-8 py-3 text-sm tracking-widest uppercase hover:bg-amber-700 transition-all duration-300"
           >
             {hero?.ctaPrimaryText || t('home.viewMenu')}
           </Link>
-          <Link
-            to={hero?.ctaSecondaryLink || '/locations'}
-            className="border border-white/30 text-white/80 px-8 py-3 text-sm tracking-widest uppercase hover:border-white hover:text-white transition-all duration-300"
-          >
-            {hero?.ctaSecondaryText || t('home.findLocation')}
-          </Link>
+          {hero?.ctaSecondaryText && hero?.ctaSecondaryLink && (
+            <Link
+              to={hero.ctaSecondaryLink}
+              className="bg-amber-600 text-white px-8 py-3 text-sm tracking-widest uppercase hover:bg-amber-700 transition-all duration-300"
+            >
+              {hero.ctaSecondaryText}
+            </Link>
+          )}
+          {hero?.whatsappNumber && (
+            <a
+              href={getWhatsAppReservationUrl(t, hero.whatsappNumber)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-500 text-white px-8 py-3 text-sm tracking-widest uppercase hover:bg-green-600 transition-all duration-300"
+            >
+              WhatsApp
+            </a>
+          )}
         </div>
       </div>
     </section>

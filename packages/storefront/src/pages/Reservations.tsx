@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext.js';
 import { Link } from 'react-router-dom';
+import { getWhatsAppReservationUrl } from '../utils/whatsapp.js';
 
 interface Location {
   id: string;
@@ -232,6 +233,15 @@ export default function Reservations() {
             >
               {submitting ? t('reservations.booking') : t('reservations.bookNow')}
             </button>
+
+            <a
+              href={getWhatsAppReservationUrl(t)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full bg-green-500 text-white py-2.5 rounded-lg font-medium hover:bg-green-600 transition-colors text-center"
+            >
+              WhatsApp
+            </a>
           </form>
         </div>
 
