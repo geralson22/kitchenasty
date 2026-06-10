@@ -3,10 +3,67 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KitchenAsty - Order Online</title>
+    <meta name="description" content="Ordena hamburguesas frescas y hechas a la orden en línea desde Gocha Burgers. Explora nuestro menú, ordena para entrega o recogido, y disfruta de deliciosas comidas." />
+    <meta name="keywords" content="hamburguesas, pedidos en línea, entrega, recogido, Gocha Burgers, restaurante, comida" />
+    <meta property="og:title" content="Gocha Burgers - Pedido Online" />
+    <meta property="og:description" content="Ordena hamburguesas frescas y hechas a la orden en línea desde Gocha Burgers. Explora nuestro menú, ordena para entrega o recogido, y disfruta de deliciosas comidas." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Gocha Burgers - Pedido Online" />
+    <meta name="twitter:description" content="Ordena hamburguesas frescas y hechas a la orden en línea desde Gocha Burgers. Explora nuestro menú, ordena para entrega o recogido, y disfruta de deliciosas comidas." />
+    <link rel="alternate" hreflang="en" href="https://gochaburgers.com/?lang=en" />
+    <link rel="alternate" hreflang="es" href="https://gochaburgers.com/?lang=es" />
+    <link rel="alternate" hreflang="fr" href="https://gochaburgers.com/?lang=fr" />
+    <link rel="alternate" hreflang="de" href="https://gochaburgers.com/?lang=de" />
+    <link rel="alternate" hreflang="it" href="https://gochaburgers.com/?lang=it" />
+    <link rel="alternate" hreflang="pt" href="https://gochaburgers.com/?lang=pt" />
+    <link rel="alternate" hreflang="x-default" href="https://gochaburgers.com/" />
+    <title>Gocha Burgers - Pedido Online</title>
+    <style>
+      .initial-loader {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        z-index: 9999;
+        gap: 1.5rem;
+      }
+      .initial-loader.hidden {
+        display: none;
+      }
+      .initial-loader img {
+        width: 120px;
+        height: auto;
+      }
+      .initial-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #e5e7eb;
+        border-top-color: #ea580c;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="initial-loader">
+        <img src="/logo.svg" alt="Gocha Burgers" />
+        <div class="initial-spinner"></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      window.addEventListener('load', function() {
+        var loader = document.querySelector('.initial-loader');
+        if (loader) loader.classList.add('hidden');
+      });
+    </script>
   </body>
 </html>

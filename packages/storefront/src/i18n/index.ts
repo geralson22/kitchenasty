@@ -6,6 +6,7 @@ import fr from './locales/fr.json';
 import de from './locales/de.json';
 import it from './locales/it.json';
 import pt from './locales/pt.json';
+import { updateMetaTags } from '../utils/seo.js';
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -39,6 +40,9 @@ i18n.use(initReactI18next).init({
 i18n.on('languageChanged', (lng) => {
   localStorage.setItem('language', lng);
   document.documentElement.lang = lng;
+  updateMetaTags(lng);
 });
+
+updateMetaTags(savedLanguage);
 
 export default i18n;

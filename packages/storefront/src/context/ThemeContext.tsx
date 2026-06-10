@@ -42,12 +42,13 @@ export interface SiteSettings {
 interface ThemeContextType {
   settings: SiteSettings;
   isDark: boolean;
+  isLoading: boolean;
 }
 
 const defaultSettings: SiteSettings = {
   id: 'default',
-  siteName: 'KitchenAsty',
-  siteTitle: 'KitchenAsty - Order Online',
+  siteName: 'Gocha Burgers',
+  siteTitle: 'Gocha Burgers - Order Online',
   favicon: null,
   logo: null,
   colorPrimary: '#ea580c',
@@ -62,6 +63,7 @@ const defaultSettings: SiteSettings = {
 const ThemeContext = createContext<ThemeContextType>({
   settings: defaultSettings,
   isDark: false,
+  isLoading: true,
 });
 
 /**
@@ -123,16 +125,31 @@ function applyColorVars(prefix: string, hex: string) {
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
   const [isDark, setIsDark] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/settings')
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && json.data) {
-          setSettings(json.data);
-        }
-      })
-      .catch(() => {});
+    const RETRY_WAIT_MS = 2000;
+
+    const loadSettings = () => {
+      fetch('/api/settings')
+        .then((res) => {
+          if (!res.ok) throw new Error('Settings fetch failed');
+          return res.json();
+        })
+        .then((json) => {
+          if (json.success && json.data) {
+            setSettings(json.data);
+            setIsLoading(false);
+          } else {
+            throw new Error('Invalid settings response');
+          }
+        })
+        .catch(() => {
+          setTimeout(loadSettings, RETRY_WAIT_MS);
+        });
+    };
+
+    loadSettings();
   }, []);
 
   // Apply CSS variables when colors change
@@ -176,7 +193,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [settings.favicon]);
 
   return (
-    <ThemeContext.Provider value={{ settings, isDark }}>
+    <ThemeContext.Provider value={{ settings, isDark, isLoading }}>
       {children}
     </ThemeContext.Provider>
   );

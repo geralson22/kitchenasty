@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.js';
 import { CartProvider, ToastProvider } from './context/CartContext.js';
-import { ThemeProvider } from './context/ThemeContext.js';
+import { ThemeProvider, useTheme } from './context/ThemeContext.js';
 import Layout from './components/Layout.js';
 import Home from './pages/Home.js';
 import Locations from './pages/Locations.js';
@@ -20,38 +20,51 @@ import AuthCallback from './pages/AuthCallback.js';
 import PrivacyPolicy from './pages/PrivacyPolicy.js';
 import Impressum from './pages/Impressum.js';
 import NotFound from './pages/NotFound.js';
+import LoadingScreen from './components/LoadingScreen.js';
 import './i18n/index.js';
 import './index.css';
+
+function AppContent() {
+  const { isLoading } = useTheme();
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  return (
+    <AuthProvider>
+      <ToastProvider>
+        <CartProvider>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/locations" element={<Locations />} />
+              <Route path="/menu" element={<Menu />} />
+              <Route path="/reservations" element={<Reservations />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/order/:id" element={<OrderConfirmation />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/account/orders" element={<OrderHistory />} />
+              <Route path="/orders/:id" element={<OrderStatus />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/impressum" element={<Impressum />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
+        </CartProvider>
+      </ToastProvider>
+    </AuthProvider>
+  );
+}
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <AuthProvider>
-          <ToastProvider>
-            <CartProvider>
-              <Routes>
-                <Route element={<Layout />}>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/locations" element={<Locations />} />
-                  <Route path="/menu" element={<Menu />} />
-                  <Route path="/reservations" element={<Reservations />} />
-                  <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/order/:id" element={<OrderConfirmation />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route path="/auth/callback" element={<AuthCallback />} />
-                  <Route path="/account" element={<Account />} />
-                  <Route path="/account/orders" element={<OrderHistory />} />
-                  <Route path="/orders/:id" element={<OrderStatus />} />
-                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                  <Route path="/impressum" element={<Impressum />} />
-                  <Route path="*" element={<NotFound />} />
-                </Route>
-              </Routes>
-            </CartProvider>
-          </ToastProvider>
-        </AuthProvider>
+        <AppContent />
       </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>,
