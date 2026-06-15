@@ -12,7 +12,7 @@ interface NavItem {
   label: string;
   icon: string;
   roles: Role[];
-  children?: { path: string; label: string }[];
+  children?: { path: string; label: string; roles?: Role[] }[];
 }
 
 const navItems: NavItem[] = [
@@ -59,14 +59,15 @@ const navItems: NavItem[] = [
     ],
   },
   { path: '/settings', label: 'Settings', icon: '\u2699', roles: ['SUPER_ADMIN', 'MANAGER'] },
-  {
+{
     path: '/developer',
     label: 'Developer',
-    icon: '\uD83D\uDEE0',
+    icon: '💠',
     roles: ['SUPER_ADMIN', 'MANAGER'],
     children: [
       { path: '/developer/metrics', label: 'API Metrics' },
-      { path: '/developer/audit-log', label: 'Audit Log' },
+      { path: '/developer/request-log', label: 'Request Log', roles: ['SUPER_ADMIN'] },
+      { path: '/developer/audit-log', label: 'Audit Log', roles: ['SUPER_ADMIN'] },
     ],
   },
   { path: '/staff', label: 'Staff', icon: '\uD83D\uDC65', roles: ['SUPER_ADMIN'] },
@@ -95,7 +96,13 @@ export default function AdminLayout({ children, onLogout }: { children: React.Re
   const lastOrderIdRef = useRef<string | null>(null);
 
   const filteredNav = user
-    ? navItems.filter((item) => item.roles.includes(user.role))
+    ? navItems
+        .filter((item) => item.roles.includes(user.role))
+        .map((item) => ({
+          ...item,
+          children: item.children?.filter((child) => !child.roles || child.roles.includes(user.role)),
+        }))
+        .filter((item) => !item.children || item.children.length > 0)
     : [];
 
   useEffect(() => {

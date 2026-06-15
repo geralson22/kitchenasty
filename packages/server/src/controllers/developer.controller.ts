@@ -112,6 +112,46 @@ export async function getEndpointMetrics(req: Request, res: Response): Promise<v
 }
 
 // ============================================================
+// GET REQUEST LOGS (individual API calls with IPs)
+// ============================================================
+
+export async function getRequestLogs(req: Request, res: Response): Promise<void> {
+  const page = Math.max(1, parseInt(req.query.page as string) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 50));
+  const ip = req.query.ip as string | undefined;
+  const path = req.query.path as string | undefined;
+  const method = req.query.method as string | undefined;
+  const hours = Math.min(168, Math.max(1, parseInt(req.query.hours as string) || 24));
+  const since = new Date(Date.now() - hours * 60 * 60 * 1000);
+
+  const where: any = { createdAt: { gte: since } };
+  if (ip) where.ipAddress = { contains: ip };
+  if (path) where.path = { contains: path };
+  if (method) where.method = method;
+
+  const [logs, total] = await Promise.all([
+    prisma.apiMetric.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+    prisma.apiMetric.count({ where }),
+  ]);
+
+  res.json({
+    success: true,
+    data: logs,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  });
+}
+
+// ============================================================
 // GET AUDIT LOGS
 // ============================================================
 

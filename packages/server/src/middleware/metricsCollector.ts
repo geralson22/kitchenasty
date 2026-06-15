@@ -8,6 +8,15 @@ function normalizePath(path: string): string {
   return path.replace(CUID_OR_UUID, ':id');
 }
 
+function getClientIp(req: Request): string | undefined {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (forwarded) {
+    const ip = typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : forwarded[0];
+    return ip;
+  }
+  return req.socket?.remoteAddress?.replace('::ffff:', '');
+}
+
 export function metricsCollector(req: Request, res: Response, next: NextFunction): void {
   const start = Date.now();
 
@@ -26,6 +35,7 @@ export function metricsCollector(req: Request, res: Response, next: NextFunction
         requestId: String(req.id),
         userId: req.user?.id,
         userType: req.user?.type,
+        ipAddress: getClientIp(req),
       },
     }).catch((err) => {
       metricsLogger.error({ err }, 'Failed to record API metric');

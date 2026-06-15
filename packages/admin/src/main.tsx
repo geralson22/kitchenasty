@@ -40,6 +40,7 @@ import StaffEdit from './pages/StaffEdit.js';
 import AcceptInvite from './pages/AcceptInvite.js';
 import Settings from './pages/Settings.js';
 import DeveloperMetrics from './pages/DeveloperMetrics.js';
+import RequestLog from './pages/RequestLog.js';
 import AuditLog from './pages/AuditLog.js';
 import SettingsGeneral from './pages/SettingsGeneral.js';
 import SettingsOrder from './pages/SettingsOrder.js';
@@ -126,6 +127,7 @@ function AppRoutes() {
         {/* Developer — MANAGER+ for metrics, SUPER_ADMIN for audit */}
         <Route path="/developer" element={<RequireRole roles={['SUPER_ADMIN', 'MANAGER']}><Navigate to="/developer/metrics" replace /></RequireRole>} />
         <Route path="/developer/metrics" element={<RequireRole roles={['SUPER_ADMIN', 'MANAGER']}><DeveloperMetrics /></RequireRole>} />
+        <Route path="/developer/request-log" element={<RequireRole roles={['SUPER_ADMIN']}><RequestLog /></RequireRole>} />
         <Route path="/developer/audit-log" element={<RequireRole roles={['SUPER_ADMIN']}><AuditLog /></RequireRole>} />
 
         {/* SUPER_ADMIN only */}

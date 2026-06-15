@@ -691,10 +691,12 @@ model ApiMetric {
   requestId    String?
   userId       String?
   userType     String?  // 'staff' | 'customer'
+  ipAddress    String?
   createdAt    DateTime @default(now())
 
   @@index([createdAt])
   @@index([path, method])
+  @@index([ipAddress])
   @@map("api_metrics")
 }
 
