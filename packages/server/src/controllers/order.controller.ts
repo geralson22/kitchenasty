@@ -35,6 +35,7 @@ const createOrderSchema = z.object({
     lat: z.number().optional(),
     lng: z.number().optional(),
   }).optional(),
+  deliveryZoneId: z.string().optional(),
   guestName: z.string().optional(),
   guestEmail: z.string().email().optional(),
   guestPhone: z.string().optional(),
@@ -56,7 +57,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  const { orderType, items, comment, scheduledAt, address, guestName, guestEmail, guestPhone, loyaltyPointsRedeem, couponCode, paymentMethod } = parsed.data;
+  const { orderType, items, comment, scheduledAt, address, deliveryZoneId, guestName, guestEmail, guestPhone, loyaltyPointsRedeem, couponCode, paymentMethod } = parsed.data;
 
   if (orderType === 'DELIVERY' && !address) {
     res.status(400).json({ success: false, error: 'Delivery address is required' });
@@ -134,12 +135,21 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
   let deliveryFee = 0;
   let deliveryZoneName = null;
   if (orderType === 'DELIVERY') {
-    if (address?.lat != null && address?.lng != null) {
+    let matchedZone = null;
+
+    if (deliveryZoneId) {
+      matchedZone = await prisma.deliveryZone.findFirst({
+        where: { id: deliveryZoneId, locationId: location.id, isActive: true },
+      });
+      if (!matchedZone) {
+        res.status(400).json({ success: false, error: 'Invalid delivery zone' });
+        return;
+      }
+    } else if (address?.lat != null && address?.lng != null) {
       const zones = await prisma.deliveryZone.findMany({
         where: { locationId: location.id, isActive: true },
       });
 
-      let matchedZone = null;
       for (const zone of zones) {
         if (zone.boundaries && Array.isArray(zone.boundaries)) {
           if (isPointInPolygon(address.lat, address.lng, zone.boundaries as [number, number][])) {
@@ -153,20 +163,13 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
         res.status(400).json({ success: false, error: 'Delivery address is outside our delivery zones' });
         return;
       }
+    }
 
-      if (matchedZone) {
-        deliveryFee = matchedZone.charge;
-        deliveryZoneName = matchedZone.name;
-      } else {
-        deliveryFee = 4.99; // Fallback if no zones configured
-      }
+    if (matchedZone) {
+      deliveryFee = matchedZone.charge;
+      deliveryZoneName = matchedZone.name;
     } else {
-      // No coordinates provided — use fallback or first zone's charge
-      const defaultZone = await prisma.deliveryZone.findFirst({
-        where: { locationId: location.id, isActive: true },
-        orderBy: { charge: 'asc' },
-      });
-      deliveryFee = defaultZone ? defaultZone.charge : 4.99;
+      deliveryFee = 4.99; // Fallback if no zones configured
     }
   }
 
