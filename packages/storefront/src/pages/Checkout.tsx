@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useCart, useToast } from '../context/CartContext.js';
 import { useAuth } from '../context/AuthContext.js';
+import { useTheme } from '../context/ThemeContext.js';
 import { getWhatsAppUrl } from '../utils/whatsapp.js';
 
 type OrderType = 'delivery' | 'pickup';
@@ -14,6 +15,7 @@ export default function Checkout() {
   const { user, token } = useAuth();
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { settings } = useTheme();
 
   const [orderType, setOrderType] = useState<OrderType>('delivery');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('CASH');
@@ -328,7 +330,7 @@ export default function Checkout() {
 
       const order = data.data;
       if (order.tax) setTax(order.tax);
-      const whatsappUrl = getWhatsAppUrl(order, orderType, t, window.location.origin);
+      const whatsappUrl = getWhatsAppUrl(order, orderType, t, window.location.origin, settings.heroSection?.whatsappNumber);
       window.open(whatsappUrl, '_blank');
 
       navigate(`/order/${data.data.id}`, { state: { order: data.data } });

@@ -6,6 +6,7 @@ import { getWhatsAppUrl } from '../utils/whatsapp.js';
 import { useAuth } from '../context/AuthContext.js';
 import { useToast } from '../context/CartContext.js';
 import { useBrowserNotifications } from '../hooks/useBrowserNotifications.js';
+import { useTheme } from '../context/ThemeContext.js';
 
 const STATUS_TRANSLATION_KEYS: Record<string, string> = {
   PENDING: 'placed',
@@ -72,6 +73,7 @@ export default function OrderConfirmation() {
   const { token } = useAuth();
   const { showToast } = useToast();
   const { requestPermission, showNotification } = useBrowserNotifications();
+  const { settings } = useTheme();
   const [order, setOrder] = useState<OrderData | null>(location.state?.order);
   const [loading, setLoading] = useState(!location.state?.order);
   const [error, setError] = useState('');
@@ -128,7 +130,7 @@ export default function OrderConfirmation() {
   const handleWhatsApp = () => {
     if (order) {
       const orderType = order.orderType === 'DELIVERY' ? 'delivery' : 'pickup';
-      const url = getWhatsAppUrl(order, orderType, t, window.location.origin);
+      const url = getWhatsAppUrl(order, orderType, t, window.location.origin, settings.heroSection?.whatsappNumber);
       window.open(url, '_blank');
     }
   };

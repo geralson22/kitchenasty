@@ -116,10 +116,12 @@ export function getWhatsAppUrl(
   order: OrderData,
   orderType: 'delivery' | 'pickup',
   t: TranslateFunction,
-  baseUrl: string = DEFAULT_BASE_URL
+  baseUrl: string = DEFAULT_BASE_URL,
+  whatsappNumber?: string
 ): string {
   const message = buildWhatsAppMessage(order, orderType, t, baseUrl);
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  const number = whatsappNumber || WHATSAPP_NUMBER;
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }
 
 export function getWhatsAppReservationUrl(t: TranslateFunction, whatsappNumber?: string): string {

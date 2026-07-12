@@ -180,7 +180,7 @@ export default function DesignLanding() {
               value={hero.whatsappNumber || ''}
               onChange={(e) => setHero({ ...hero, whatsappNumber: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-              placeholder="5492213145362 (leave empty to hide)"
+              placeholder="549XXXXXXXXX (leave empty to hide)"
             />
           </div>
           <div className="md:col-span-2">
