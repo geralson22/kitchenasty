@@ -42,7 +42,7 @@ const updateMenuItemSchema = createMenuItemSchema.partial().omit({ slug: true })
 
 export async function listMenuItems(req: Request, res: Response): Promise<void> {
   const page = Math.max(1, parseInt(req.query.page as string) || 1);
-  const limit = Math.min(50, Math.max(1, parseInt(req.query.limit as string) || 20));
+  const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 100));
   const skip = (page - 1) * limit;
   const categoryId = req.query.categoryId as string | undefined;
   const search = req.query.search as string | undefined;
@@ -56,7 +56,7 @@ export async function listMenuItems(req: Request, res: Response): Promise<void> 
       where,
       skip,
       take: limit,
-      orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
+      orderBy: [{ isActive: 'desc' }, { sortOrder: 'asc' }, { name: 'asc' }],
       include: {
         category: { select: { id: true, name: true } },
         _count: { select: { options: true, allergens: true, mealtimes: true } },

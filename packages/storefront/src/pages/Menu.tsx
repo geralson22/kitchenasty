@@ -288,6 +288,6 @@ function buildItemsUrl(categoryId: string | null, search: string, page: number):
   if (categoryId) params.set('categoryId', categoryId);
   if (search) params.set('search', search);
   if (page > 1) params.set('page', String(page));
-  params.set('limit', '12');
+  params.set('limit', '100');
   return `/api/menu/items?${params}`;
 }
